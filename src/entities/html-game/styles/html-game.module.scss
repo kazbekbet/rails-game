@@ -1,0 +1,117 @@
+.app {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+}
+
+.map {
+  height: 100%;
+}
+
+.walls {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.marker,
+.player {
+  position: absolute;
+}
+
+.player {
+  width: 30px;
+  height: 30px;
+  top: calc(100% - 160px);
+  left: 541px;
+  background-image: url("@assets/animation/stay/frame_0.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.25s ease;
+  overflow: hidden;
+}
+
+@keyframes frame-animation {
+  100% {
+    transform: translateX(-400%);
+  }
+}
+
+$frames-number: 4;
+
+/* по-умолчанию анимация заблокирована */
+.player > .player-move-animation {
+  display: none;
+}
+
+/* Анимация движения - начало ------------*/
+.player.move {
+  background-image: none;
+}
+
+/* Когда добавляется класс move, то это триггерит анимацию движения */
+.player.move > .player-move-animation {
+  display: flex;
+}
+
+.player-move-animation {
+  animation: frame-animation 1s infinite;
+  animation-timing-function: steps($frames-number);
+  width: calc($frames-number * 100%);
+}
+
+.animation-frame {
+  display: block;
+  flex-basis: calc(100% / $frames-number);
+  max-width: calc(100% / $frames-number);
+  width: calc(100% / $frames-number);
+}
+
+.animation-frame > img {
+  width: 30px;
+}
+/* Анимация движения - конец -------------*/
+
+.player.talk {
+  background-image: url("@assets/pers1_says.gif");
+}
+
+.player.up {
+  transform: rotateZ(0deg);
+}
+
+.player.right {
+  transform: rotateZ(90deg);
+}
+
+.player.down {
+  transform: rotateZ(180deg);
+}
+
+.player.left {
+  transform: rotateZ(-90deg);
+}
+
+.marker1 {
+  top: 548px;
+  left: 1038px;
+}
+
+.marker2 {
+  top: 75px;
+  left: 278px;
+}
+
+.marker3 {
+  top: 75px;
+  left: 1463px;
+}
+
+.marker4 {
+  top: 303px;
+  left: 655px;
+}

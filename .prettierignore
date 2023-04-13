@@ -1,0 +1,13 @@
+# artifacts
+build
+coverage
+storybook-static
+# dependencies
+node_modules
+
+# Ignore files
+*.json
+*.scss
+*.css
+*.md
+*.html

@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "ESNext",
+    "target": "es5",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+
+    "paths": {
+      "@app/*": ["app/*"],
+      "@entities/*": ["entities/*"],
+      "@features/*": ["features/*"],
+      "@assets/*": ["shared/assets/*"],
+      "@shared/*": ["shared/*"],
+      "@libs/*": ["shared/libs/*"],
+      "@components/*": ["shared/components/*"],
+      "@styles/*": ["shared/styles/*"],
+
+      "@helpers": ["shared/helpers"],
+      "@helpers/*": ["shared/helpers/*"],
+
+      "@interfaces/*": ["shared/interfaces/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["src/shared/assets"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
