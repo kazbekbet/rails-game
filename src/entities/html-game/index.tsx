@@ -2,7 +2,7 @@ import styles from './styles/html-game.module.scss';
 import { useEffect, useRef } from 'react';
 import { Markers } from '@entities/html-game/components/markers';
 import { Map } from '@entities/html-game/components/map';
-import { Player, Player1 } from '@entities/html-game/components/player';
+import { Player } from '@entities/html-game/components/player';
 import { Walls } from '@entities/html-game/components/walls';
 import { PlayerAnimation } from '@entities/html-game/components/player-animation';
 import * as model from '@entities/html-game/model';
@@ -34,9 +34,9 @@ export function HtmlGame() {
     <div className={styles.app}>
       <Map />
       <Markers />
-      <Player1 ref={playerRef}>
+      <Player ref={playerRef}>
         <PlayerAnimation />
-      </Player1>
+      </Player>
       <Walls ref={wallsRef} />
     </div>
   );
