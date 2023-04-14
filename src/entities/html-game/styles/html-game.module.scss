@@ -41,38 +41,27 @@
   }
 }
 
-$frames-number: 4;
-
-/* по-умолчанию анимация заблокирована */
-.player > .player-move-animation {
-  display: none;
-}
-
 /* Анимация движения - начало ------------*/
 .player.move {
-  background-image: none;
+  animation: player-walk-animation .75s infinite;
 }
 
-/* Когда добавляется класс move, то это триггерит анимацию движения */
-.player.move > .player-move-animation {
-  display: flex;
-}
-
-.player-move-animation {
-  animation: frame-animation 1s infinite;
-  animation-timing-function: steps($frames-number);
-  width: calc($frames-number * 100%);
-}
-
-.animation-frame {
-  display: block;
-  flex-basis: calc(100% / $frames-number);
-  max-width: calc(100% / $frames-number);
-  width: calc(100% / $frames-number);
-}
-
-.animation-frame > img {
-  width: 30px;
+@keyframes player-walk-animation {
+  0% {
+    background-image: url("@assets/animation/walk/frame_0.png");
+  }
+  25% {
+    background-image: url("@assets/animation/walk/frame_1.png");
+  }
+  50% {
+    background-image: url("@assets/animation/walk/frame_0.png");
+  }
+  75% {
+    background-image: url("@assets/animation/walk/frame_2.png");
+  }
+  100% {
+    background-image: url("@assets/animation/walk/frame_3.png");
+  }
 }
 /* Анимация движения - конец -------------*/
 

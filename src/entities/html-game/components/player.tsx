@@ -1,25 +1,18 @@
-import styles from '@entities/html-game/styles/html-game.module.scss';
 import { useStore } from 're-event';
 import * as model from '../model';
 import { KEYS } from '../constants';
 import { ForwardedRef, forwardRef, useEffect } from 'react';
 import classNames from 'classnames';
+import styles from '../styles/html-game.module.scss';
 
-export const Player = forwardRef(({ children }: { children: JSX.Element }, ref: ForwardedRef<HTMLObjectElement>) => {
+export const Player = forwardRef((_, ref: ForwardedRef<HTMLObjectElement>) => {
   const playerStyle = useStore(model.playerStyleStore);
   const moveCssClass = useStore(model.moveCssClassStore);
   const isPlayerMoving = useStore(model.isPlayerMovingStore);
 
-  const className = classNames({
-    [`${styles.player}`]: true,
-    [`${moveCssClass}`]: true,
-    // TODO: разобраться с анимацией
-    // [`${styles.move}`]: isPlayerMoving,
+  const className = classNames(styles.player, moveCssClass, {
+    [styles.move!]: isPlayerMoving,
   });
 
-  return (
-    <div id="player" ref={ref} className={className} style={playerStyle}>
-      {children}
-    </div>
-  );
+  return <div id="player" ref={ref} className={className} style={playerStyle} />;
 });
