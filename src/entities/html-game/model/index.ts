@@ -53,7 +53,7 @@ export function handleKeyUp() {
 }
 
 function isGameReady() {
-  const isWallsSetted = wallsDomRectsStore.getState().length > 0;
+  const isWallsSetted = isWallsSettedStore.getState();
   const isUserInfoSetted = playerInfoStore.getState().isInitialInfoSetted;
 
   return isWallsSetted && isUserInfoSetted;
@@ -84,6 +84,12 @@ export const isPlayerMovingStore = setStore(false)
   .on(startMoving, () => true)
   .on(stopMoving, () => false)
   .clear(clearAll);
+
+/** Вспомогательный стор, отвечающий на вопрос получены ли координаты всех стен. */
+export const isWallsSettedStore = setComputedStore({
+  store: wallsDomRectsStore,
+  transform: value => value.length > 0,
+});
 
 /** Вычисляемый стор, содержащий текущий css класс, соответствующий направлению игрока. */
 export const moveCssClassStore = setComputedStore({
