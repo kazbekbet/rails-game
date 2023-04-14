@@ -63,7 +63,6 @@ function isGameReady() {
 /** Стор с координатами всех стен. */
 const wallsDomRectsStore = setStore<DOMRect[]>([])
   .on(setWallsDomRects, (_, payload) => payload)
-  .watch(console.log)
   .clear(clearAll);
 
 /** Стор с информацией об игроке (его позиционирование и размеры). */
