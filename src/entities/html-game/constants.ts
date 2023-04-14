@@ -27,6 +27,7 @@ export const playerInfoTemplate: PlayerInfo = {
   top: 0,
   width: 0,
   isInitialInfoSetted: false,
+  toJSON() {},
 };
 
 export const KEYS = {

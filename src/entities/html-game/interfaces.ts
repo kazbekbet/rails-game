@@ -1,4 +1,4 @@
-export type PlayerInfo = Pick<DOMRect, 'bottom' | 'height' | 'left' | 'right' | 'top' | 'width' | 'x' | 'y'> & {
+export type PlayerInfo = DOMRect & {
   isInitialInfoSetted: boolean;
 };
 

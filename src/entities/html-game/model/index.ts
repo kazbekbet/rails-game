@@ -9,7 +9,8 @@ import {
   ValidKey,
 } from '../constants';
 import { MarkerRectMap, MarkerTypes, PlayerInfo } from '../interfaces';
-import { mapPlayerInfo } from '@entities/html-game/utils/map-player-info';
+import { mapPlayerInfo } from '../utils/map-player-info';
+import { CollisionDetector } from '../utils/physics';
 
 // --> События.
 const setWallsDomRects = setEvent<DOMRect[]>();
@@ -44,6 +45,9 @@ export function handleKeyDown(event: KeyboardEvent) {
   if (isGameReady() && KEYS_LIST.includes(event.code)) {
     const keyCode = event.code as ValidKey;
     const { Up, Right, Down, Left } = KEYS;
+
+    //TODO: доработать коллизии.
+    playerCollisionStore.getState();
 
     startMoving(keyCode);
     if (Up.includes(keyCode)) moveUp();
@@ -88,6 +92,16 @@ const markersRectsStore = setStore<MarkerRectMap>(new Map())
 const currentKeyStore = setStore<ValidKey>(ArrowKeys.ArrowUp)
   .on(startMoving, (_, payload) => payload)
   .clear(clearAll);
+
+/** Стор, содержащий информацию о коллизиях игрока с предметами. */
+const playerCollisionStore = setComputedStore({
+  store: playerInfoStore,
+  transform: playerInfo => {
+    return new CollisionDetector(wallsDomRectsStore.getState(), markersRectsStore.getState()).detectCollision(
+      playerInfo
+    );
+  },
+});
 
 /** Вспомогательный стор, отвечающий на вопрос двигается ли игрок в данный момент. */
 export const isPlayerMovingStore = setStore(false)
