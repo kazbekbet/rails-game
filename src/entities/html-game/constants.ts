@@ -1,5 +1,5 @@
-import styles from './styles/html-game.module.scss';
 import { PlayerInfo } from './interfaces';
+import styles from './styles/html-game.module.scss';
 
 export type ValidKey = ArrowKeys | LetterKeys;
 

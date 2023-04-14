@@ -1,4 +1,5 @@
 import mainMarker from '@assets/markers/main.svg';
+import classNames from "classnames";
 import styles from '../styles/html-game.module.scss';
 
 export function Markers() {
@@ -7,22 +8,22 @@ export function Markers() {
       <img
         id="hr"
         src={mainMarker}
-        className={`${styles.marker} ${styles.marker1}`}
+        className={classNames(styles.marker, styles.marker1)}
       />
       <img
         id="marketing"
         src={mainMarker}
-        className={`${styles.marker} ${styles.marker2}`}
+        className={classNames(styles.marker, styles.marker2)}
       />
       <img
         id="sw"
         src={mainMarker}
-        className={`${styles.marker} ${styles.marker3}`}
+        className={classNames(styles.marker, styles.marker3)}
       />
       <img
         id="teamlead"
         src={mainMarker}
-        className={`${styles.marker} ${styles.marker4}`}
+        className={classNames(styles.marker, styles.marker4)}
       />
     </>
   );

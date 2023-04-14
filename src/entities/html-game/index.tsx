@@ -4,7 +4,6 @@ import { Markers } from '@entities/html-game/components/markers';
 import { Map } from '@entities/html-game/components/map';
 import { Player } from '@entities/html-game/components/player';
 import { Walls } from '@entities/html-game/components/walls';
-import { PlayerAnimation } from '@entities/html-game/components/player-animation';
 import * as model from '@entities/html-game/model';
 import { useKeysSubscription } from '@entities/html-game/utils/use-keys-subscription';
 import { useWallsRects } from '@entities/html-game/utils/use-walls-dom-rects';
@@ -34,9 +33,7 @@ export function HtmlGame() {
     <div className={styles.app}>
       <Map />
       <Markers />
-      <Player ref={playerRef}>
-        <PlayerAnimation />
-      </Player>
+      <Player ref={playerRef} />
       <Walls ref={wallsRef} />
     </div>
   );
