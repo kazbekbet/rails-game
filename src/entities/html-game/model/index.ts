@@ -8,12 +8,13 @@ import {
   playerInfoTemplate,
   ValidKey,
 } from '../constants';
-import { PlayerInfo } from '../interfaces';
+import { MarkerRectMap, MarkerTypes, PlayerInfo } from '../interfaces';
 import { mapPlayerInfo } from '@entities/html-game/utils/map-player-info';
 
 // --> События.
 const setWallsDomRects = setEvent<DOMRect[]>();
 const setInitialPlayerInfo = setEvent<PlayerInfo>();
+const setMarkersRefs = setEvent<MarkerRectMap>();
 
 const moveUp = setEvent<void>();
 const moveRight = setEvent<void>();
@@ -33,6 +34,10 @@ export function handleSetWallsRects(svgRects: NodeListOf<SVGRectElement>) {
 
 export function handleSetPlayerInitialInfo(domInfo: DOMRect) {
   setInitialPlayerInfo(mapPlayerInfo(playerInfoTemplate, domInfo));
+}
+
+export function handleSetMarkersRects(rectMap: MarkerRectMap) {
+  setMarkersRefs(rectMap);
 }
 
 export function handleKeyDown(event: KeyboardEvent) {
@@ -72,6 +77,11 @@ const playerInfoStore = setStore<PlayerInfo>(playerInfoTemplate)
   .on(moveRight, info => ({ ...info, x: info.x + MOVEMENT_DELTA }))
   .on(moveDown, info => ({ ...info, y: info.y + MOVEMENT_DELTA }))
   .on(moveLeft, info => ({ ...info, x: info.x - MOVEMENT_DELTA }))
+  .clear(clearAll);
+
+/** Стор с координатами и информацией о маркерах. */
+const markersRectsStore = setStore<MarkerRectMap>(new Map())
+  .on(setMarkersRefs, (_, payload) => payload)
   .clear(clearAll);
 
 /** Стор, содержайщий последнюю нажатую кнопку. */
