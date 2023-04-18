@@ -11,6 +11,7 @@ import {
 import { MarkerTypes, PlayerInfo, MayBeUnique } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
 import { CollisionDetector } from '../utils/physics';
+import { signal } from '@libs/signal';
 
 // --> События.
 const setWallsDomRects = setEvent<MayBeUnique<DOMRect>[]>();
@@ -124,7 +125,10 @@ const currentKeyStore = setStore<ValidKey>(ArrowKeys.ArrowUp)
   .on(startMoving, (_, payload) => payload)
   .clear(clearAll);
 
-/** Стор, содержащий информацию о коллизиях игрока с предметами. */
+/**
+ * Стор, содержащий информацию о коллизиях игрока с предметами.
+ * --> Отправляет сигнал с id предметом столкновения.
+ * */
 const playerCollisionStore = setComputedStore({
   store: playerInfoStore,
   transform: playerInfo => {
@@ -134,9 +138,7 @@ const playerCollisionStore = setComputedStore({
     return new CollisionDetector(walls, markers).detectCollision(playerInfo);
   },
 }).watch(({ object }) => {
-  if (object?.uniqueId) {
-    console.log(`Collided with ${object.uniqueId}`);
-  }
+  object?.uniqueId && signal.send(object.uniqueId);
 });
 
 /** Вспомогательный стор, отвечающий на вопрос двигается ли игрок в данный момент. */
