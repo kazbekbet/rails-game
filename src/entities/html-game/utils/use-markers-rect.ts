@@ -1,8 +1,8 @@
 import { RefObject, useEffect } from 'react';
-import { MarkerRectMap, MarkerTypes } from '../interfaces';
+import { MarkerTypes, MayBeUnique } from '../interfaces';
 
 interface Props {
-  onSetRects: (rectMap: MarkerRectMap) => unknown;
+  onSetRects: (rectMap: MayBeUnique<DOMRect>[]) => unknown;
   refs: Record<MarkerTypes, RefObject<HTMLImageElement>>;
 }
 
@@ -15,14 +15,24 @@ export function useMarkersRect({ refs, onSetRects }: Props) {
       .every(ref => ref);
 
     if (isRefsReceived) {
-      const markerRefs = new Map([
-        [MarkerTypes.Hr, refs.hr.current!.getBoundingClientRect()],
-        [MarkerTypes.Marketing, refs.marketing.current!.getBoundingClientRect()],
-        [MarkerTypes.Sw, refs.sw.current!.getBoundingClientRect()],
-        [MarkerTypes.Teamlead, refs.teamlead.current!.getBoundingClientRect()],
+      onSetRects([
+        {
+          rect: refs.hr.current!.getBoundingClientRect(),
+          uniqueId: MarkerTypes.Hr,
+        },
+        {
+          rect: refs.marketing.current!.getBoundingClientRect(),
+          uniqueId: MarkerTypes.Marketing,
+        },
+        {
+          rect: refs.sw.current!.getBoundingClientRect(),
+          uniqueId: MarkerTypes.Sw,
+        },
+        {
+          rect: refs.teamlead.current!.getBoundingClientRect(),
+          uniqueId: MarkerTypes.Teamlead,
+        },
       ]);
-
-      onSetRects(markerRefs as MarkerRectMap);
     }
   }, currentRefs);
 }

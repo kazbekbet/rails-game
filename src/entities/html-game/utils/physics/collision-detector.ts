@@ -1,17 +1,17 @@
-import { MarkerRectMap, PlayerInfo } from '@entities/html-game/interfaces';
+import { PlayerInfo, MayBeUnique } from '@entities/html-game/interfaces';
 
 export class CollisionDetector {
-  constructor(private walls: DOMRect[], private markerRects: MarkerRectMap) {}
+  constructor(private walls: MayBeUnique<DOMRect>[], private markerRects: MayBeUnique<DOMRect>[]) {}
 
   public detectCollision(player: PlayerInfo) {
+    const normalizedPlayer = this.normalize(player);
     const obstacles = this.getObstacles();
 
     for (const obstacle of obstacles) {
-      if (this.getIsOverlapped(player, obstacle) && this.getIsOverlapped(obstacle, player)) {
+      if (this.getIsOverlapped(normalizedPlayer, obstacle) && this.getIsOverlapped(obstacle, normalizedPlayer)) {
         return {
           object: obstacle,
-          direction: this.getDirection(player, obstacle),
-          isCollided: true,
+          direction: this.getDirection(normalizedPlayer, obstacle),
         };
       }
     }
@@ -20,24 +20,27 @@ export class CollisionDetector {
     return {
       object: null,
       direction: null,
-      isCollided: false,
     };
   }
 
-  private getIsOverlapped(first: DOMRect, second: DOMRect) {
-    return first.left <= second.right && first.top <= second.bottom;
+  private getIsOverlapped(first: MayBeUnique<DOMRect>, second: MayBeUnique<DOMRect>) {
+    return first.rect.left <= second.rect.right && first.rect.top <= second.rect.bottom;
   }
 
-  private getDirection(p: DOMRect, o: DOMRect) {
+  private getDirection(p: MayBeUnique<DOMRect>, o: MayBeUnique<DOMRect>) {
     return {
-      top: o.top <= p.top && o.bottom < p.bottom,
-      bottom: o.bottom >= p.bottom && o.top > p.top,
-      left: o.left <= p.left && o.right < p.right,
-      right: o.right >= p.right && o.left > p.left,
+      top: o.rect.top <= p.rect.top && o.rect.bottom < p.rect.bottom,
+      bottom: o.rect.bottom >= p.rect.bottom && o.rect.top > p.rect.top,
+      left: o.rect.left <= p.rect.left && o.rect.right < p.rect.right,
+      right: o.rect.right >= p.rect.right && o.rect.left > p.rect.left,
     };
   }
 
-  private getObstacles(): DOMRect[] {
+  private getObstacles(): MayBeUnique<DOMRect>[] {
     return [...this.walls, ...Array.from(this.markerRects.values())];
+  }
+
+  private normalize<T>(value: T): MayBeUnique<T> {
+    return { rect: value };
   }
 }

@@ -5,8 +5,13 @@ import { useRef } from 'react';
 import { useMarkersRect } from '@entities/html-game/utils/use-markers-rect';
 import { MarkerTypes } from '@entities/html-game/interfaces';
 import * as model from '../model';
+import { useStore } from 're-event';
 
-export function Markers() {
+interface Props {
+  showTemplate?: boolean;
+}
+
+export function Markers({ showTemplate }: Props) {
   const hrRef = useRef<HTMLImageElement>(null);
   const marketingRef = useRef<HTMLImageElement>(null);
   const swRef = useRef<HTMLImageElement>(null);
@@ -50,6 +55,31 @@ export function Markers() {
       {markers.map(({ id, ref, className }) => (
         <img key={id} ref={ref} className={className} src={mainMarker} />
       ))}
+      {showTemplate && <MarkersTemplate />}
+    </>
+  );
+}
+
+export function MarkersTemplate() {
+  const markersRects = useStore(model.markersRectsStore);
+
+  return (
+    <>
+      {markersRects.map(({ rect, uniqueId }, index) => {
+        return (
+          <div
+            key={uniqueId ?? index}
+            style={{
+              backgroundColor: 'green',
+              position: 'absolute',
+              width: rect.width,
+              top: rect.top,
+              left: rect.left,
+              height: rect.height,
+            }}
+          />
+        );
+      })}
     </>
   );
 }

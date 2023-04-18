@@ -5,18 +5,50 @@ import { useStore } from 're-event';
 import * as model from '../model';
 import classNames from 'classnames';
 
-export const Walls = forwardRef((_, ref: ForwardedRef<HTMLObjectElement>) => {
+interface Props {
+  showTemplate?: boolean;
+}
+
+export const Walls = forwardRef(({ showTemplate }: Props, ref: ForwardedRef<HTMLObjectElement>) => {
   const isWallsSetted = useStore(model.isWallsSettedStore);
 
   return (
-    <object
-      id="walls"
-      ref={ref}
-      className={styles.walls}
-      // --> Костыль, который исправляет баг остановки передвижения после клика по документу.
-      // По большому счёту нам больше не нужен object после того, как мы установили все стены в стор.
-      style={{ display: isWallsSetted ? 'none' : 'block' }}
-      data={walls}
-    />
+    <>
+      <object
+        id="walls"
+        ref={ref}
+        className={styles.walls}
+        // --> Костыль, который исправляет баг остановки передвижения после клика по документу.
+        // По большому счёту нам больше не нужен object после того, как мы установили все стены в стор.
+        style={{ display: isWallsSetted ? 'none' : 'block' }}
+        data={walls}
+      />
+      {showTemplate && <WallsTemplate />}
+    </>
   );
 });
+
+/** Компонент отображает все реальные стены на карте. */
+function WallsTemplate() {
+  const wallsRects = useStore(model.wallsDomRectsStore);
+
+  return (
+    <>
+      {wallsRects.map(({ rect, uniqueId }, index) => {
+        return (
+          <div
+            key={uniqueId ?? index}
+            style={{
+              backgroundColor: 'red',
+              position: 'absolute',
+              width: rect.width,
+              top: rect.top,
+              left: rect.left,
+              height: rect.height,
+            }}
+          />
+        );
+      })}
+    </>
+  );
+}

@@ -1,6 +1,4 @@
-export type PlayerInfo = DOMRect & {
-  isInitialInfoSetted: boolean;
-};
+export type PlayerInfo = DOMRect & { isInitialInfoSetted: boolean; };
 
 export enum MarkerTypes {
   Hr = 'hr',
@@ -9,4 +7,4 @@ export enum MarkerTypes {
   Teamlead = 'teamlead',
 }
 
-export type MarkerRectMap = Map<MarkerTypes, DOMRect>;
+export type MayBeUnique<T> = { rect: T } & { uniqueId?: string };

@@ -8,14 +8,14 @@ import {
   playerInfoTemplate,
   ValidKey,
 } from '../constants';
-import { MarkerRectMap, MarkerTypes, PlayerInfo } from '../interfaces';
+import { MarkerTypes, PlayerInfo, MayBeUnique } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
 import { CollisionDetector } from '../utils/physics';
 
 // --> События.
-const setWallsDomRects = setEvent<DOMRect[]>();
+const setWallsDomRects = setEvent<MayBeUnique<DOMRect>[]>();
 const setInitialPlayerInfo = setEvent<PlayerInfo>();
-const setMarkersRefs = setEvent<MarkerRectMap>();
+const setMarkersRefs = setEvent<MayBeUnique<DOMRect>[]>();
 
 const moveUp = setEvent<void>();
 const moveRight = setEvent<void>();
@@ -29,7 +29,11 @@ const clearAll = setEvent<void>();
 
 // --> Обработчики
 export function handleSetWallsRects(svgRects: NodeListOf<SVGRectElement>) {
-  const mappedRects = Array.from(svgRects).map(rect => rect.getBoundingClientRect());
+  const mappedRects = Array.from(svgRects).map((rect, index) => ({
+    rect: rect.getBoundingClientRect().toJSON(),
+    uniqueId: `wall_${index}`,
+  }));
+
   setWallsDomRects(mappedRects);
 }
 
@@ -37,7 +41,7 @@ export function handleSetPlayerInitialInfo(domInfo: DOMRect) {
   setInitialPlayerInfo(mapPlayerInfo(playerInfoTemplate, domInfo));
 }
 
-export function handleSetMarkersRects(rectMap: MarkerRectMap) {
+export function handleSetMarkersRects(rectMap: MayBeUnique<DOMRect>[]) {
   setMarkersRefs(rectMap);
 }
 
@@ -46,14 +50,21 @@ export function handleKeyDown(event: KeyboardEvent) {
     const keyCode = event.code as ValidKey;
     const { Up, Right, Down, Left } = KEYS;
 
-    //TODO: доработать коллизии.
-    playerCollisionStore.getState();
+    const { direction } = playerCollisionStore.getState();
 
     startMoving(keyCode);
-    if (Up.includes(keyCode)) moveUp();
-    if (Right.includes(keyCode)) moveRight();
-    if (Down.includes(keyCode)) moveDown();
-    if (Left.includes(keyCode)) moveLeft();
+    if (Up.includes(keyCode)) {
+      !direction?.top && moveUp();
+    }
+    if (Right.includes(keyCode)) {
+      !direction?.right && moveRight();
+    }
+    if (Down.includes(keyCode)) {
+      !direction?.bottom && moveDown();
+    }
+    if (Left.includes(keyCode)) {
+      !direction?.left && moveLeft();
+    }
   }
 }
 
@@ -70,21 +81,41 @@ function isGameReady() {
 
 // --> Сторы.
 /** Стор с координатами всех стен. */
-const wallsDomRectsStore = setStore<DOMRect[]>([])
+export const wallsDomRectsStore = setStore<MayBeUnique<DOMRect>[]>([])
   .on(setWallsDomRects, (_, payload) => payload)
   .clear(clearAll);
 
 /** Стор с информацией об игроке (его позиционирование и размеры). */
 const playerInfoStore = setStore<PlayerInfo>(playerInfoTemplate)
   .on(setInitialPlayerInfo, (_, payload) => ({ ...payload, isInitialInfoSetted: true }))
-  .on(moveUp, info => ({ ...info, y: info.y - MOVEMENT_DELTA }))
-  .on(moveRight, info => ({ ...info, x: info.x + MOVEMENT_DELTA }))
-  .on(moveDown, info => ({ ...info, y: info.y + MOVEMENT_DELTA }))
-  .on(moveLeft, info => ({ ...info, x: info.x - MOVEMENT_DELTA }))
+  .on(moveUp, info => {
+    const yAxisDecrement = info.y - MOVEMENT_DELTA;
+    const bottomPosition = yAxisDecrement + info.height;
+
+    return { ...info, y: yAxisDecrement, top: yAxisDecrement, bottom: bottomPosition };
+  })
+  .on(moveDown, info => {
+    const yAxisIncrement = info.y + MOVEMENT_DELTA;
+    const bottomPosition = yAxisIncrement + info.height;
+
+    return { ...info, y: yAxisIncrement, top: yAxisIncrement, bottom: bottomPosition };
+  })
+  .on(moveRight, info => {
+    const xAxisIncrement = info.x + MOVEMENT_DELTA;
+    const rightPosition = xAxisIncrement + info.width;
+
+    return { ...info, x: xAxisIncrement, left: xAxisIncrement, right: rightPosition };
+  })
+  .on(moveLeft, info => {
+    const xAxisDecrement = info.x - MOVEMENT_DELTA;
+    const rightPosition = xAxisDecrement + info.width;
+
+    return { ...info, x: xAxisDecrement, left: xAxisDecrement, right: rightPosition };
+  })
   .clear(clearAll);
 
 /** Стор с координатами и информацией о маркерах. */
-const markersRectsStore = setStore<MarkerRectMap>(new Map())
+export const markersRectsStore = setStore<MayBeUnique<DOMRect>[]>([])
   .on(setMarkersRefs, (_, payload) => payload)
   .clear(clearAll);
 
@@ -97,10 +128,15 @@ const currentKeyStore = setStore<ValidKey>(ArrowKeys.ArrowUp)
 const playerCollisionStore = setComputedStore({
   store: playerInfoStore,
   transform: playerInfo => {
-    return new CollisionDetector(wallsDomRectsStore.getState(), markersRectsStore.getState()).detectCollision(
-      playerInfo
-    );
+    const walls = wallsDomRectsStore.getState();
+    const markers = markersRectsStore.getState();
+
+    return new CollisionDetector(walls, markers).detectCollision(playerInfo);
   },
+}).watch(({ object }) => {
+  if (object?.uniqueId) {
+    console.log(`Collided with ${object.uniqueId}`);
+  }
 });
 
 /** Вспомогательный стор, отвечающий на вопрос двигается ли игрок в данный момент. */
@@ -124,5 +160,5 @@ export const moveCssClassStore = setComputedStore({
 /** Вычисляемый стор, содержащий стиль с позиционированием игрока. */
 export const playerStyleStore = setComputedStore({
   store: playerInfoStore,
-  transform: info => (info.isInitialInfoSetted ? { top: `${info.y}px`, left: `${info.x}px` } : {}),
+  transform: info => (info.isInitialInfoSetted ? { top: `${info.top}px`, left: `${info.left}px` } : {}),
 });
