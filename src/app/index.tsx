@@ -1,11 +1,11 @@
 import { HtmlGame } from '@entities/html-game';
-import { attachModal } from '@features/show-modal';
+import { ModalWindow } from '@features/show-modal';
 
 function App() {
   return (
     <>
       <HtmlGame />
-      {attachModal}
+      <ModalWindow />
     </>
   );
 }
