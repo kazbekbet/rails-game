@@ -1,2 +1,2 @@
-export { Modal } from './Modal';
+export { Modal, ModalView } from './Modal';
 export * from './Speech';

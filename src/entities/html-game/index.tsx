@@ -8,8 +8,9 @@ import * as model from '@entities/html-game/model';
 import { useKeysSubscription } from '@entities/html-game/utils/use-keys-subscription';
 import { useWallsRects } from '@entities/html-game/utils/use-walls-dom-rects';
 import { usePlayerRect } from '@entities/html-game/utils/use-player-rect';
+import { MarkerTypes } from './interfaces';
 
-export function HtmlGame() {
+function HtmlGame() {
   const wallsRef = useRef<HTMLObjectElement>(null);
   const playerRef = useRef<HTMLObjectElement>(null);
 
@@ -38,3 +39,5 @@ export function HtmlGame() {
     </div>
   );
 }
+
+export { HtmlGame, MarkerTypes };

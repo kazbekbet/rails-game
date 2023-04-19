@@ -15,6 +15,7 @@ export const Overlay = styled.div`
   justify-content: center;
   background-color: ${C_OVERLAY_50};
   backdrop-filter: blur(7px);
+  z-index: 1;
 `;
 
 export const Button = styled.button`
