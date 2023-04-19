@@ -1,9 +1,9 @@
 import { setEvent, setStore } from 're-event';
 
 const send = setEvent<string>();
-const clear = setEvent();
+const clear = setEvent<void>();
 
-const store = setStore('', { attachLogger: true, name: 'signalStore' })
+const store = setStore('')
   .on(send, (_, payload) => payload)
   .clear(clear);
 
