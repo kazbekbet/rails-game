@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: Vite app build with yarn
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install
-          
+
       - name: Build production bundle
         uses: borales/actions-yarn@v4
         with:
