@@ -7,8 +7,9 @@ import {
   MovementDeltaPx,
   PlayerInfoTemplate,
   ValidKey,
+  MarkersList,
 } from '../constants';
-import { MarkerTypes, PlayerInfo, MayBeUnique } from '../interfaces';
+import { MarkerTypes, PlayerInfo, MayBeUnique, CompletableMarker } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
 import { CollisionDetector } from '../utils/physics';
 import { signal } from '@libs/signal';
@@ -17,6 +18,7 @@ import { signal } from '@libs/signal';
 const setWallsDomRects = setEvent<MayBeUnique<DOMRect>[]>();
 const setInitialPlayerInfo = setEvent<PlayerInfo>();
 const setMarkersRefs = setEvent<MayBeUnique<DOMRect>[]>();
+const setMarkerComplete = setEvent<MarkerTypes>();
 
 const moveUp = setEvent<void>();
 const moveRight = setEvent<void>();
@@ -42,8 +44,14 @@ export function handleSetPlayerInitialInfo(domInfo: DOMRect) {
   setInitialPlayerInfo(mapPlayerInfo(PlayerInfoTemplate, domInfo));
 }
 
-export function handleSetMarkersRects(rectMap: MayBeUnique<DOMRect>[]) {
-  setMarkersRefs(rectMap);
+export function handleSetMarkersRects(markers: MayBeUnique<DOMRect>[]) {
+  setMarkersRefs(markers);
+}
+
+export function handleCompleteMarker(id: string) {
+  if (MarkersList.includes(id as MarkerTypes)) {
+    setMarkerComplete(id as MarkerTypes);
+  }
 }
 
 export function handleKeyDown(event: KeyboardEvent) {
@@ -120,6 +128,24 @@ export const markersRectsStore = setStore<MayBeUnique<DOMRect>[]>([])
   .on(setMarkersRefs, (_, payload) => payload)
   .clear(clearAll);
 
+/** Стор с информацией о маркерах с возможностью доступа по константному времени. */
+export const markersIsCompletedStore = setComputedStore({
+  store: markersRectsStore,
+  transform: markers =>
+    markers.reduce((prev: Record<string, CompletableMarker>, curr) => {
+      if (curr.uniqueId) {
+        prev[curr.uniqueId] = {
+          completed: false,
+          id: curr.uniqueId as MarkerTypes,
+        };
+      }
+
+      return prev;
+    }, {}),
+}).on(setMarkerComplete, (markers, payload) => {
+  return { ...markers, [payload]: { id: payload, completed: true } };
+});
+
 /** Стор, содержайщий последнюю нажатую кнопку. */
 const currentKeyStore = setStore<ValidKey>(ArrowKeys.ArrowUp)
   .on(startMoving, (_, payload) => payload)
@@ -138,7 +164,10 @@ const playerCollisionStore = setComputedStore({
     return new CollisionDetector(walls, markers).detectCollision(playerInfo);
   },
 }).watch(({ object }) => {
-  object?.uniqueId && signal.send(object.uniqueId);
+  if (object?.uniqueId) {
+    signal.send(object.uniqueId);
+    handleCompleteMarker(object.uniqueId);
+  }
 });
 
 /** Вспомогательный стор, отвечающий на вопрос двигается ли игрок в данный момент. */

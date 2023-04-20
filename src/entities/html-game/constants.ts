@@ -1,4 +1,4 @@
-import { PlayerInfo } from './interfaces';
+import { MarkerTypes, PlayerInfo } from './interfaces';
 import styles from './styles/html-game.module.scss';
 
 export type ValidKey = ArrowKeys | LetterKeys;
@@ -59,6 +59,9 @@ export const MapMoveStylesByKey = {
   [LetterKeys.KeyD]: styles.right,
   [LetterKeys.KeyA]: styles.left,
 } as const;
+
+/** Список маркеров. */
+export const MarkersList = Object.values(MarkerTypes);
 
 /** Скорость передвижения в px. */
 export const MovementDeltaPx = 1;

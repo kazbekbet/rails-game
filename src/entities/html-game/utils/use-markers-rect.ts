@@ -3,7 +3,7 @@ import { MarkerTypes, MayBeUnique } from '../interfaces';
 
 interface Props {
   onSetRects: (rectMap: MayBeUnique<DOMRect>[]) => unknown;
-  refs: Record<MarkerTypes, RefObject<HTMLImageElement>>;
+  refs: Record<MarkerTypes, RefObject<HTMLObjectElement>>;
 }
 
 export function useMarkersRect({ refs, onSetRects }: Props) {

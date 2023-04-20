@@ -6,19 +6,20 @@ import { useMarkersRect } from '@entities/html-game/utils/use-markers-rect';
 import { MarkerTypes } from '@entities/html-game/interfaces';
 import * as model from '../model';
 import { useStore } from 're-event';
+import { Marker } from '@entities/html-game/components/marker';
 
 interface Props {
   showTemplate?: boolean;
 }
 
 export function Markers({ showTemplate }: Props) {
-  const hrRef = useRef<HTMLImageElement>(null);
-  const omRef = useRef<HTMLImageElement>(null);
-  const swRef = useRef<HTMLImageElement>(null);
-  const pmoRef = useRef<HTMLImageElement>(null);
-  const backRef = useRef<HTMLImageElement>(null);
-  const testRef = useRef<HTMLImageElement>(null);
-  const analystRef = useRef<HTMLImageElement>(null);
+  const hrRef = useRef<HTMLObjectElement>(null);
+  const omRef = useRef<HTMLObjectElement>(null);
+  const swRef = useRef<HTMLObjectElement>(null);
+  const pmoRef = useRef<HTMLObjectElement>(null);
+  const backRef = useRef<HTMLObjectElement>(null);
+  const testRef = useRef<HTMLObjectElement>(null);
+  const analystRef = useRef<HTMLObjectElement>(null);
 
   useMarkersRect({
     refs: {
@@ -37,51 +38,51 @@ export function Markers({ showTemplate }: Props) {
     {
       id: MarkerTypes.Hr,
       ref: hrRef,
-      className: styles.marker,
-      position: { top: '548px', left: '1038px' },
+      className: markersClass.female,
+      style: { top: '589px', left: '1038px', rotate: '' },
     },
     {
       id: MarkerTypes.Om,
       ref: omRef,
-      className: styles.marker,
-      position: { top: '77px', left: '278px' },
+      className: markersClass.female,
+      style: { top: '82px', left: '298px', rotate: '180deg' },
     },
     {
       id: MarkerTypes.Sw,
       ref: swRef,
-      className: styles.marker,
-      position: { top: '67px', left: '1121px' },
+      className: markersClass.male,
+      style: { top: '67px', left: '1121px', rotate: '270deg' },
     },
     {
       id: MarkerTypes.Pmo,
       ref: pmoRef,
-      className: styles.marker,
-      position: { top: '321px', left: '866px' },
+      className: markersClass.female,
+      style: { top: '325px', left: '880px', rotate: '180deg' },
     },
     {
       id: MarkerTypes.Back,
       ref: backRef,
-      className: styles.marker,
-      position: { top: '417px', left: '632px' },
+      className: markersClass.female,
+      style: { top: '423px', left: '643px', rotate: '270deg' },
     },
     {
       id: MarkerTypes.Test,
       ref: testRef,
-      className: styles.marker,
-      position: { top: '77px', left: '615px' },
+      className: markersClass.male,
+      style: { top: '82px', left: '633px', rotate: '180deg' },
     },
     {
       id: MarkerTypes.Analyst,
       ref: analystRef,
-      className: styles.marker,
-      position: { top: '204px', left: '1010px' },
+      className: markersClass.female,
+      style: { top: '212px', left: '1016px', rotate: '90deg' },
     },
   ];
 
   return (
     <>
-      {markers.map(({ id, ref, className, position }) => (
-        <img id={id} key={id} ref={ref} className={className} style={{ ...position }} src={mainMarker} />
+      {markers.map(({ id, ref, className, style }) => (
+        <Marker key={id} id={id} className={className} ref={ref} style={style} />
       ))}
       {showTemplate && <MarkersTemplate />}
     </>
@@ -111,3 +112,8 @@ export function MarkersTemplate() {
     </>
   );
 }
+
+const markersClass = {
+  male: classNames(styles.marker, styles.male),
+  female: classNames(styles.marker, styles.female),
+};

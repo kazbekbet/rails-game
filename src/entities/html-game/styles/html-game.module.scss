@@ -1,3 +1,5 @@
+@import "@styles/common.scss";
+
 .app {
   height: 100vh;
   position: relative;
@@ -23,13 +25,25 @@
 }
 
 .marker {
-  width: 48px;
-  height: 48px;
+  overflow: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 30px;
+  height: 30px;
+  background-color: transparentize($accent-color, 0.5);
+  border: $accent-color .125rem solid;
+  border-radius: 1rem;
+}
+
+.marker.completed {
+  background-color: transparentize($green-color, 0.5);
+  border: $green-color .125rem solid;
 }
 
 .player {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   top: calc(100% - 160px);
   left: 541px;
   background-image: url("@assets/animation/stay/frame_0.png");
@@ -68,8 +82,8 @@
     background-image: url("@assets/animation/walk/frame_3.png");
   }
 }
-/* Анимация движения - конец -------------*/
 
+/* Анимация движения - конец -------------*/
 .player.talk {
   background-image: url("@assets/pers1_says.gif");
 }
@@ -88,4 +102,36 @@
 
 .player.left {
   transform: rotateZ(-90deg);
+}
+
+.marker.female {
+  background-image: url("@assets/animation/markers/female/frame_0.png");
+  //TODO: оптимизировать анимации. Тормозит.
+  //animation: female-marker-animation 3s infinite;
+}
+
+@keyframes female-marker-animation {
+  0% {
+    background-image: url("@assets/animation/markers/female/frame_0.png");
+  }
+
+  25% {
+    background-image: url("@assets/animation/markers/female/frame_1.png")
+  }
+
+  50% {
+    background-image: url("@assets/animation/markers/female/frame_2.png");
+  }
+
+  75% {
+    background-image: url("@assets/animation/markers/female/frame_3.png");
+  }
+
+  100% {
+    background-image: url("@assets/animation/markers/female/frame_4.png");
+  }
+}
+
+.marker.male {
+  background-image: url("@assets/animation/markers/male/frame_0.png");
 }
