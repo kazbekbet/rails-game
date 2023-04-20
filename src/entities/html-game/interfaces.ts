@@ -1,10 +1,13 @@
-export type PlayerInfo = DOMRect & { isInitialInfoSetted: boolean; };
+export type PlayerInfo = DOMRect & { isInitialInfoSetted: boolean };
 
 export enum MarkerTypes {
   Hr = 'hr',
-  Marketing = 'marketing',
+  Om = 'om',
   Sw = 'sw',
-  Teamlead = 'teamlead',
+  Pmo = 'pmo',
+  Back = 'back',
+  Test = 'test',
+  Analyst = 'analyst',
 }
 
 export type MayBeUnique<T> = { rect: T } & { uniqueId?: string };
