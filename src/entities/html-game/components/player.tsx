@@ -1,6 +1,6 @@
 import { useStore } from 're-event';
 import * as model from '../model';
-import { KEYS } from '../constants';
+import { AllowedKeys } from '../constants';
 import { ForwardedRef, forwardRef, useEffect } from 'react';
 import classNames from 'classnames';
 import styles from '../styles/html-game.module.scss';

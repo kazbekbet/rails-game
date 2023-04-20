@@ -1,7 +1,7 @@
 import mainMarker from '@assets/markers/main.svg';
 import classNames from 'classnames';
 import styles from '../styles/html-game.module.scss';
-import { useRef } from 'react';
+import { RefObject, useRef } from 'react';
 import { useMarkersRect } from '@entities/html-game/utils/use-markers-rect';
 import { MarkerTypes } from '@entities/html-game/interfaces';
 import * as model from '../model';
@@ -13,16 +13,22 @@ interface Props {
 
 export function Markers({ showTemplate }: Props) {
   const hrRef = useRef<HTMLImageElement>(null);
-  const marketingRef = useRef<HTMLImageElement>(null);
+  const omRef = useRef<HTMLImageElement>(null);
   const swRef = useRef<HTMLImageElement>(null);
-  const teamleadRef = useRef<HTMLImageElement>(null);
+  const pmoRef = useRef<HTMLImageElement>(null);
+  const backRef = useRef<HTMLImageElement>(null);
+  const testRef = useRef<HTMLImageElement>(null);
+  const analystRef = useRef<HTMLImageElement>(null);
 
   useMarkersRect({
     refs: {
       [MarkerTypes.Hr]: hrRef,
-      [MarkerTypes.Marketing]: marketingRef,
+      [MarkerTypes.Om]: omRef,
       [MarkerTypes.Sw]: swRef,
-      [MarkerTypes.Teamlead]: teamleadRef,
+      [MarkerTypes.Pmo]: pmoRef,
+      [MarkerTypes.Back]: backRef,
+      [MarkerTypes.Test]: testRef,
+      [MarkerTypes.Analyst]: analystRef,
     },
     onSetRects: model.handleSetMarkersRects,
   });
@@ -31,29 +37,51 @@ export function Markers({ showTemplate }: Props) {
     {
       id: MarkerTypes.Hr,
       ref: hrRef,
-      className: classNames(styles.marker, styles.marker1),
+      className: styles.marker,
+      position: { top: '548px', left: '1038px' },
     },
     {
-      id: MarkerTypes.Marketing,
-      ref: marketingRef,
-      className: classNames(styles.marker, styles.marker2),
+      id: MarkerTypes.Om,
+      ref: omRef,
+      className: styles.marker,
+      position: { top: '77px', left: '278px' },
     },
     {
       id: MarkerTypes.Sw,
       ref: swRef,
-      className: classNames(styles.marker, styles.marker3),
+      className: styles.marker,
+      position: { top: '67px', left: '1121px' },
     },
     {
-      id: MarkerTypes.Teamlead,
-      ref: teamleadRef,
-      className: classNames(styles.marker, styles.marker4),
+      id: MarkerTypes.Pmo,
+      ref: pmoRef,
+      className: styles.marker,
+      position: { top: '321px', left: '866px' },
+    },
+    {
+      id: MarkerTypes.Back,
+      ref: backRef,
+      className: styles.marker,
+      position: { top: '417px', left: '632px' },
+    },
+    {
+      id: MarkerTypes.Test,
+      ref: testRef,
+      className: styles.marker,
+      position: { top: '77px', left: '615px' },
+    },
+    {
+      id: MarkerTypes.Analyst,
+      ref: analystRef,
+      className: styles.marker,
+      position: { top: '204px', left: '1010px' },
     },
   ];
 
   return (
     <>
-      {markers.map(({ id, ref, className }) => (
-        <img key={id} ref={ref} className={className} src={mainMarker} />
+      {markers.map(({ id, ref, className, position }) => (
+        <img id={id} key={id} ref={ref} className={className} style={{ ...position }} src={mainMarker} />
       ))}
       {showTemplate && <MarkersTemplate />}
     </>

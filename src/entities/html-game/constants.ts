@@ -3,6 +3,7 @@ import styles from './styles/html-game.module.scss';
 
 export type ValidKey = ArrowKeys | LetterKeys;
 
+/** Кнопки - стрелки. */
 export enum ArrowKeys {
   ArrowRight = 'ArrowRight',
   ArrowLeft = 'ArrowLeft',
@@ -10,6 +11,7 @@ export enum ArrowKeys {
   ArrowDown = 'ArrowDown',
 }
 
+/** Кнопки - WASD. */
 export enum LetterKeys {
   KeyD = 'KeyD',
   KeyA = 'KeyA',
@@ -17,7 +19,8 @@ export enum LetterKeys {
   KeyS = 'KeyS',
 }
 
-export const playerInfoTemplate: PlayerInfo = {
+/** Начальный (нулевой) шаблон информации об игроке. */
+export const PlayerInfoTemplate: PlayerInfo = {
   x: -100,
   y: -100,
   bottom: 0,
@@ -28,21 +31,24 @@ export const playerInfoTemplate: PlayerInfo = {
   width: 0,
   isInitialInfoSetted: false,
   toJSON() {},
-};
+} as const;
 
-export const KEYS = {
+/** Доступные кнопки для передвижения в зависимости от направления. */
+export const AllowedKeys = {
   Right: [ArrowKeys.ArrowRight, LetterKeys.KeyD],
   Left: [ArrowKeys.ArrowLeft, LetterKeys.KeyA],
   Up: [ArrowKeys.ArrowUp, LetterKeys.KeyW],
   Down: [ArrowKeys.ArrowDown, LetterKeys.KeyS],
 };
 
-export const KEYS_LIST: string[] = Object.values(KEYS).reduce((prev, curr) => {
+/** Доступные кнопки для передвижения (используется для проверки). */
+export const AllowedKeysList: string[] = Object.values(AllowedKeys).reduce((prev, curr) => {
   prev.push(...curr);
   return prev;
 }, []);
 
-export const MAP_MOVE_STYLES_BY_KEY = {
+/** Зависимость стилей от нажатой кнопки. */
+export const MapMoveStylesByKey = {
   [ArrowKeys.ArrowUp]: styles.up,
   [ArrowKeys.ArrowDown]: styles.down,
   [ArrowKeys.ArrowRight]: styles.right,
@@ -52,6 +58,7 @@ export const MAP_MOVE_STYLES_BY_KEY = {
   [LetterKeys.KeyS]: styles.down,
   [LetterKeys.KeyD]: styles.right,
   [LetterKeys.KeyA]: styles.left,
-};
+} as const;
 
-export const MOVEMENT_DELTA = 1;
+/** Скорость передвижения в px. */
+export const MovementDeltaPx = 1;

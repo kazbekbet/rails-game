@@ -1,11 +1,11 @@
 import { setComputedStore, setEvent, setStore } from 're-event';
 import {
   ArrowKeys,
-  KEYS,
-  KEYS_LIST,
-  MAP_MOVE_STYLES_BY_KEY,
-  MOVEMENT_DELTA,
-  playerInfoTemplate,
+  AllowedKeys,
+  AllowedKeysList,
+  MapMoveStylesByKey,
+  MovementDeltaPx,
+  PlayerInfoTemplate,
   ValidKey,
 } from '../constants';
 import { MarkerTypes, PlayerInfo, MayBeUnique } from '../interfaces';
@@ -39,7 +39,7 @@ export function handleSetWallsRects(svgRects: NodeListOf<SVGRectElement>) {
 }
 
 export function handleSetPlayerInitialInfo(domInfo: DOMRect) {
-  setInitialPlayerInfo(mapPlayerInfo(playerInfoTemplate, domInfo));
+  setInitialPlayerInfo(mapPlayerInfo(PlayerInfoTemplate, domInfo));
 }
 
 export function handleSetMarkersRects(rectMap: MayBeUnique<DOMRect>[]) {
@@ -47,9 +47,9 @@ export function handleSetMarkersRects(rectMap: MayBeUnique<DOMRect>[]) {
 }
 
 export function handleKeyDown(event: KeyboardEvent) {
-  if (isGameReady() && KEYS_LIST.includes(event.code)) {
+  if (isGameReady() && AllowedKeysList.includes(event.code)) {
     const keyCode = event.code as ValidKey;
-    const { Up, Right, Down, Left } = KEYS;
+    const { Up, Right, Down, Left } = AllowedKeys;
 
     const { direction } = playerCollisionStore.getState();
 
@@ -87,28 +87,28 @@ export const wallsDomRectsStore = setStore<MayBeUnique<DOMRect>[]>([])
   .clear(clearAll);
 
 /** Стор с информацией об игроке (его позиционирование и размеры). */
-const playerInfoStore = setStore<PlayerInfo>(playerInfoTemplate)
+const playerInfoStore = setStore<PlayerInfo>(PlayerInfoTemplate)
   .on(setInitialPlayerInfo, (_, payload) => ({ ...payload, isInitialInfoSetted: true }))
   .on(moveUp, info => {
-    const yAxisDecrement = info.y - MOVEMENT_DELTA;
+    const yAxisDecrement = info.y - MovementDeltaPx;
     const bottomPosition = yAxisDecrement + info.height;
 
     return { ...info, y: yAxisDecrement, top: yAxisDecrement, bottom: bottomPosition };
   })
   .on(moveDown, info => {
-    const yAxisIncrement = info.y + MOVEMENT_DELTA;
+    const yAxisIncrement = info.y + MovementDeltaPx;
     const bottomPosition = yAxisIncrement + info.height;
 
     return { ...info, y: yAxisIncrement, top: yAxisIncrement, bottom: bottomPosition };
   })
   .on(moveRight, info => {
-    const xAxisIncrement = info.x + MOVEMENT_DELTA;
+    const xAxisIncrement = info.x + MovementDeltaPx;
     const rightPosition = xAxisIncrement + info.width;
 
     return { ...info, x: xAxisIncrement, left: xAxisIncrement, right: rightPosition };
   })
   .on(moveLeft, info => {
-    const xAxisDecrement = info.x - MOVEMENT_DELTA;
+    const xAxisDecrement = info.x - MovementDeltaPx;
     const rightPosition = xAxisDecrement + info.width;
 
     return { ...info, x: xAxisDecrement, left: xAxisDecrement, right: rightPosition };
@@ -156,7 +156,7 @@ export const isWallsSettedStore = setComputedStore({
 /** Вычисляемый стор, содержащий текущий css класс, соответствующий направлению игрока. */
 export const moveCssClassStore = setComputedStore({
   store: currentKeyStore,
-  transform: key => MAP_MOVE_STYLES_BY_KEY[key],
+  transform: key => MapMoveStylesByKey[key],
 });
 
 /** Вычисляемый стор, содержащий стиль с позиционированием игрока. */

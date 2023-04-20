@@ -15,24 +15,12 @@ export function useMarkersRect({ refs, onSetRects }: Props) {
       .every(ref => ref);
 
     if (isRefsReceived) {
-      onSetRects([
-        {
-          rect: refs.hr.current!.getBoundingClientRect(),
-          uniqueId: MarkerTypes.Hr,
-        },
-        {
-          rect: refs.marketing.current!.getBoundingClientRect(),
-          uniqueId: MarkerTypes.Marketing,
-        },
-        {
-          rect: refs.sw.current!.getBoundingClientRect(),
-          uniqueId: MarkerTypes.Sw,
-        },
-        {
-          rect: refs.teamlead.current!.getBoundingClientRect(),
-          uniqueId: MarkerTypes.Teamlead,
-        },
-      ]);
+      const mappedRefsToRect: MayBeUnique<DOMRect>[] = Object.entries(refs).map(([key, ref]) => ({
+        uniqueId: key,
+        rect: ref.current!.getBoundingClientRect(),
+      }));
+
+      onSetRects(mappedRefsToRect);
     }
   }, currentRefs);
 }
