@@ -9,7 +9,7 @@ export function ModalCounter() {
 
   return (
     <div className={cn(styles.counter, styles.container)}>
-      <p className={cn(styles.counter, styles.label)}>Пройдено коллег: </p>
+      <p className={cn(styles.counter, styles.label)}>Знакомств с коллегами: </p>
       <div>
         <h2 className={cn(styles.counter, styles.progress)}>
           <Counter /> из {allCount}

@@ -84,8 +84,9 @@ export function handleKeyUp() {
 function isGameReady() {
   const isWallsSetted = isWallsSettedStore.getState();
   const isUserInfoSetted = playerInfoStore.getState().isInitialInfoSetted;
+  const isMarkersSetted = markersRectsStore.getState().length > 0;
 
-  return isWallsSetted && isUserInfoSetted;
+  return isWallsSetted && isUserInfoSetted && isMarkersSetted;
 }
 
 // --> Сторы.
