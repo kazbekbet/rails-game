@@ -1,0 +1,26 @@
+@import "@styles/common.scss";
+
+.counter {
+  color: white;
+}
+
+.counter.container {
+  position: absolute;
+  background-color: transparentize($accent-color, .25);
+  border: $accent-color .25rem solid;
+  padding: .5rem;
+  top: 1rem;
+  right: 1rem;
+  border-radius: 1rem;
+  z-index: 1;
+}
+
+.counter.label {
+  font-family: sans-serif;
+  font-weight: lighter;
+}
+
+.counter.progress {
+  text-align: right;
+  font-family: sans-serif;
+}

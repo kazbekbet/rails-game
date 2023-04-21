@@ -1,5 +1,5 @@
 import { signal } from '@libs/signal';
-import { setComputedStore } from 're-event';
+import { setComputedStore, setEvent, setStore, redirect } from 're-event';
 import { MarkerTypes } from '@entities/html-game';
 import { MODALS_CONFIG } from '@libs/rails-lib';
 
@@ -13,17 +13,23 @@ const mappedModalConfig = MODALS_CONFIG.map(element => ({ id: element.id, data: 
 );
 
 export const closeModal = signal.clear;
+export const clearCompletedModals = setEvent<void>();
+const addModalId = setEvent<MarkerTypes>();
 
-export const signalStore = setComputedStore({
-  store: signal.store,
-});
+/** Стор, содержащий список просмотренных модалок. */
+export const completedModalIds = setStore<MarkerTypes[]>([])
+  .on(addModalId, (modalIds, payload) => {
+    if (!modalIds.includes(payload)) {
+      return [...modalIds, payload];
+    }
 
-export const isModalIdStore = setComputedStore({
-  store: signalStore,
-  transform: id => Object.values(MarkerTypes).includes(id as MarkerTypes),
-});
+    return modalIds;
+  })
+  .clear(clearCompletedModals);
 
+/** Стор с информацией о текущем модальном окне. */
 export const currentModalStore = setComputedStore({
-  store: signalStore,
+  store: signal.store,
+  condition: id => !completedModalIds.getState().includes(id as MarkerTypes),
   transform: id => mappedModalConfig[id],
-});
+}).watch(modal => modal?.id && addModalId(modal.id as MarkerTypes));

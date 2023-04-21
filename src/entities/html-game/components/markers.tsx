@@ -57,7 +57,7 @@ export function Markers({ showTemplate }: Props) {
       id: MarkerTypes.Pmo,
       ref: pmoRef,
       className: markersClass.female,
-      style: { top: '325px', left: '880px', rotate: '180deg' },
+      style: { top: '330px', left: '880px', rotate: '180deg' },
     },
     {
       id: MarkerTypes.Back,
