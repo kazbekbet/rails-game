@@ -9,6 +9,7 @@ import './web-components';
 
 type TProps = {
   children: React.ReactElement | React.ReactElement[];
+  customFooter?: React.ReactElement;
   isVisible?: boolean;
   onClose?: () => void;
   title: string | React.ReactElement;
@@ -25,7 +26,7 @@ export const Modal: React.FC<TProps> = ({ children, isVisible, onClose, title })
       )
     : null;
 
-export const ModalView: React.FC<TProps> = ({ children, isVisible, onClose, title }) =>
+export const ModalView: React.FC<TProps> = ({ children, isVisible, onClose, title, customFooter }) =>
   isVisible ? (
     <>
       <GlobalStyle />
@@ -35,9 +36,7 @@ export const ModalView: React.FC<TProps> = ({ children, isVisible, onClose, titl
             <h2>{title}</h2>
           </ModalHeader>
           <ModalBody>{children}</ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Закрыть</Button>
-          </ModalFooter>
+          <ModalFooter>{customFooter ?? <Button onClick={onClose}>Закрыть</Button>}</ModalFooter>
         </ModalContainer>
       </Overlay>
     </>

@@ -6,15 +6,30 @@ import pmoVideo from '../assets/video/pmo.mp4';
 import backVideo from '../assets/video/back.mp4';
 import testVideo from '../assets/video/test.mp4';
 import analystVideo from '../assets/video/analyst.mp4';
+import { DialogLine } from '../components/Speech';
 import { Line, Speech } from '../components';
 import { Column, Wrapper } from '../styled/dialogs';
+import { TextContent } from '../styled/dialogs';
+import { StaticContent } from '../components/Modal/StaticContent';
+import { Button } from '../styled/common';
+
+export interface Modal {
+  id: string;
+  title: JSX.Element;
+  children: JSX.Element;
+  customFooter?: React.ReactElement;
+}
 
 export const LOCKED_MODALS = new Set<string>();
 
-export const MODALS_CONFIG = [
+export const MODALS_CONFIG: Modal[] = [
   {
     id: 'hr',
-    title: <Line time={1} delay={0.25}>Привет!</Line>,
+    title: (
+      <Line time={1} delay={0.25}>
+        Привет!
+      </Line>
+    ),
     children: (
       <Wrapper>
         <Column>
@@ -35,7 +50,11 @@ export const MODALS_CONFIG = [
   },
   {
     id: 'om',
-    title: <Line time={1} delay={0.25}>Привет!</Line>,
+    title: (
+      <Line time={1} delay={0.25}>
+        Привет!
+      </Line>
+    ),
     children: (
       <Wrapper>
         <Column>
@@ -58,7 +77,11 @@ export const MODALS_CONFIG = [
   },
   {
     id: 'sw',
-    title: <Line time={1} delay={0.25}>Привет!</Line>,
+    title: (
+      <Line time={1} delay={0.25}>
+        Привет!
+      </Line>
+    ),
     children: (
       <Wrapper>
         <Column>
@@ -78,7 +101,11 @@ export const MODALS_CONFIG = [
   },
   {
     id: 'pmo',
-    title: <Line time={1} delay={0.25}>Привет!</Line>,
+    title: (
+      <Line time={1} delay={0.25}>
+        Привет!
+      </Line>
+    ),
     children: (
       <Wrapper>
         <Column>
@@ -98,7 +125,11 @@ export const MODALS_CONFIG = [
   },
   {
     id: 'back',
-    title: <Line time={1} delay={0.25}>Привет!</Line>,
+    title: (
+      <Line time={1} delay={0.25}>
+        Привет!
+      </Line>
+    ),
     children: (
       <Wrapper>
         <Column>
@@ -118,7 +149,11 @@ export const MODALS_CONFIG = [
   },
   {
     id: 'test',
-    title: <Line time={1} delay={0.25}>Привет!</Line>,
+    title: (
+      <Line time={1} delay={0.25}>
+        Привет!
+      </Line>
+    ),
     children: (
       <Wrapper>
         <Column>
@@ -138,7 +173,11 @@ export const MODALS_CONFIG = [
   },
   {
     id: 'analyst',
-    title: <Line time={1} delay={0.25}>Привет!</Line>,
+    title: (
+      <Line time={1} delay={0.25}>
+        Привет!
+      </Line>
+    ),
     children: (
       <Wrapper>
         <Column>
@@ -160,3 +199,51 @@ export const MODALS_CONFIG = [
     ),
   },
 ];
+
+export const GAME_FINISHED_MODAL: Modal = {
+  id: 'finish',
+  title: (
+    <Line time={1} delay={0.25}>
+      Поздравляем! Ты прошёл игру!
+    </Line>
+  ),
+  children: (
+    <Wrapper>
+      <Column>
+        <StaticContent>
+          {[
+            'Ты молодец!',
+            'В процессе игры ты познакомился с коллегами:',
+            '• Backend разработчиком Машей',
+            '• HR специалистом Сашей',
+            '• PMO специалистом Машей',
+            '• Системным аналитиком Надей',
+            '• Специалистом техподдержки Стасом',
+            '• Специалистом по тестированию Денисом',
+            '• Офис-менеджером Настей',
+          ]}
+        </StaticContent>
+        {/*
+        TODO: понять, стоит ли использовать, так как в финальной модалке раздражает.
+        <Speech delay={0}>{[
+          '• Backend разработчиком Машей',
+          '• HR специалистом Сашей',
+          '• PMO специалистом Машей',
+          '• Системным аналитиком Надей',
+          '• Специалистом техподдержки Стасом',
+          '• Специалистом по тестированию Денисом',
+          '• Офис-менеджером Настей',
+        ]}</Speech>*/}
+      </Column>
+    </Wrapper>
+  ),
+  customFooter: (
+    <Button
+      onClick={() => {
+        window.open('https://www.google.com/intl/ru/forms/about/', '_blank');
+      }}
+    >
+      Пройти опрос
+    </Button>
+  ),
+};

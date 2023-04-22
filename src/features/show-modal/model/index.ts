@@ -1,7 +1,8 @@
 import { signal } from '@libs/signal';
 import { setComputedStore, setEvent, setStore, redirect } from 're-event';
 import { MarkerTypes } from '@entities/html-game';
-import { MODALS_CONFIG } from '@libs/rails-lib';
+import { MODALS_CONFIG, GAME_FINISHED_MODAL, Modal } from '@libs/rails-lib';
+import { delay } from '@helpers/delay';
 
 // --> Маппит конфиг в удобоваримый вид Record<string, object> для поиска модалки по ключу.
 const mappedModalConfig = MODALS_CONFIG.map(element => ({ id: element.id, data: element })).reduce(
@@ -15,6 +16,7 @@ const mappedModalConfig = MODALS_CONFIG.map(element => ({ id: element.id, data: 
 export const closeModal = signal.clear;
 export const clearCompletedModals = setEvent<void>();
 const addModalId = setEvent<MarkerTypes>();
+const addCustomModal = setEvent<Modal>();
 
 /** Стор, содержащий список просмотренных модалок. */
 export const completedModalIds = setStore<MarkerTypes[]>([])
@@ -27,9 +29,27 @@ export const completedModalIds = setStore<MarkerTypes[]>([])
   })
   .clear(clearCompletedModals);
 
-/** Стор с информацией о текущем модальном окне. */
+/**
+ * Стор с информацией о текущем модальном окне.
+ * --> Сеттит информацию в completedModalIds при просмотре модального окна.
+ * */
 export const currentModalStore = setComputedStore({
   store: signal.store,
   condition: id => !completedModalIds.getState().includes(id as MarkerTypes),
   transform: id => mappedModalConfig[id],
-}).watch(modal => modal?.id && addModalId(modal.id as MarkerTypes));
+})
+  .on(addCustomModal, (_, payload) => payload)
+  .watch(modal => modal?.id && addModalId(modal.id as MarkerTypes));
+
+/**
+ * Стор с информацией о завершенной игре.
+ * --> Скорее выглядит как костыль и требует доработки со стороны re-event.
+ * */
+const isGameFinished = setStore(false)
+  .on(closeModal, () => {
+    const completedModalsLength = completedModalIds.getState().length;
+    const allModalsLength = MODALS_CONFIG.length;
+
+    return completedModalsLength === allModalsLength;
+  })
+  .watch(isFinished => isFinished && addCustomModal(GAME_FINISHED_MODAL));

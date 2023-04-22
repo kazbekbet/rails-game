@@ -45,7 +45,7 @@ export function Markers({ showTemplate }: Props) {
       id: MarkerTypes.Om,
       ref: omRef,
       className: markersClass.female,
-      style: { top: '82px', left: '298px', rotate: '180deg' },
+      style: { top: '82px', left: '300px', rotate: '180deg' },
     },
     {
       id: MarkerTypes.Sw,

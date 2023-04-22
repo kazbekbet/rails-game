@@ -9,7 +9,12 @@ export function ModalContainer() {
   return (
     <>
       {currentModal && (
-        <ModalView title={currentModal.title} isVisible={true} onClose={model.closeModal}>
+        <ModalView
+          title={currentModal.title}
+          isVisible={true}
+          customFooter={currentModal.customFooter}
+          onClose={model.closeModal}
+        >
           {currentModal.children}
         </ModalView>
       )}
