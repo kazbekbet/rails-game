@@ -55,6 +55,7 @@ export function handleCompleteMarker(id: string) {
 }
 
 export function handleKeyDown(event: KeyboardEvent) {
+  event.preventDefault();
   if (isGameReady() && AllowedKeysList.includes(event.code)) {
     const keyCode = event.code as ValidKey;
     const { Up, Right, Down, Left } = AllowedKeys;
@@ -77,7 +78,8 @@ export function handleKeyDown(event: KeyboardEvent) {
   }
 }
 
-export function handleKeyUp() {
+export function handleKeyUp(event: KeyboardEvent) {
+  event.preventDefault();
   stopMoving();
 }
 
