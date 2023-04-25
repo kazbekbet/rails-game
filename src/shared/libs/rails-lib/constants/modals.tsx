@@ -237,6 +237,9 @@ export const GAME_FINISHED_MODAL: Modal = {
       </Column>
     </Wrapper>
   ),
+  customFooter: <></>,
+  /*
+  TODO: вернуть как появится ссылка.
   customFooter: (
     <Button
       onClick={() => {
@@ -245,5 +248,5 @@ export const GAME_FINISHED_MODAL: Modal = {
     >
       Пройти опрос
     </Button>
-  ),
+  ),*/
 };
