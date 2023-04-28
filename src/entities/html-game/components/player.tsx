@@ -4,8 +4,9 @@ import { AllowedKeys } from '../constants';
 import { ForwardedRef, forwardRef, useEffect } from 'react';
 import classNames from 'classnames';
 import styles from '../styles/html-game.module.scss';
+import { HtmlGameModel } from '../model';
 
-export const Player = forwardRef((_, ref: ForwardedRef<HTMLObjectElement>) => {
+export const Player = forwardRef(({ model }: { model: HtmlGameModel }, ref: ForwardedRef<HTMLObjectElement>) => {
   const playerStyle = useStore(model.playerStyleStore);
   const moveCssClass = useStore(model.moveCssClassStore);
   const isPlayerMoving = useStore(model.isPlayerMovingStore);

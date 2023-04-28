@@ -1,0 +1,25 @@
+@import "@styles/common.scss";
+
+.meetings {
+  color: white;
+}
+
+.meetings.container {
+  position: absolute;
+  background-color: transparentize($accent-color, .25);
+  border: $accent-color .25rem solid;
+  padding: 0 1rem 0 1rem;
+  top: 1rem;
+  right: 1rem;
+  border-radius: 1rem;
+}
+
+.meetings.label {
+  font-family: sans-serif;
+  font-weight: lighter;
+}
+
+.meetings.progress {
+  text-align: right;
+  font-family: sans-serif;
+}

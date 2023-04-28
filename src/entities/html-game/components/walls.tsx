@@ -4,12 +4,14 @@ import { Ref, forwardRef, ForwardedRef } from 'react';
 import { useStore } from 're-event';
 import * as model from '../model';
 import classNames from 'classnames';
+import { HtmlGameModel } from '../model';
 
 interface Props {
+  model: HtmlGameModel;
   showTemplate?: boolean;
 }
 
-export const Walls = forwardRef(({ showTemplate }: Props, ref: ForwardedRef<HTMLObjectElement>) => {
+export const Walls = forwardRef(({ model, showTemplate }: Props, ref: ForwardedRef<HTMLObjectElement>) => {
   const isWallsSetted = useStore(model.isWallsSettedStore);
 
   return (
@@ -23,13 +25,13 @@ export const Walls = forwardRef(({ showTemplate }: Props, ref: ForwardedRef<HTML
         style={{ display: isWallsSetted ? 'none' : 'block' }}
         data={walls}
       />
-      {showTemplate && <WallsTemplate />}
+      {showTemplate && <WallsTemplate model={model} />}
     </>
   );
 });
 
 /** Компонент отображает все реальные стены на карте. */
-function WallsTemplate() {
+function WallsTemplate({ model }: { model: HtmlGameModel }) {
   const wallsRects = useStore(model.wallsDomRectsStore);
 
   return (

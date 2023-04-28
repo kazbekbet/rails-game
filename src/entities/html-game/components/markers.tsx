@@ -4,15 +4,16 @@ import styles from '../styles/html-game.module.scss';
 import { RefObject, useRef } from 'react';
 import { useMarkersRect } from '@entities/html-game/utils/use-markers-rect';
 import { MarkerTypes } from '@entities/html-game/interfaces';
-import * as model from '../model';
+import { HtmlGameModel } from '../model';
 import { useStore } from 're-event';
 import { Marker } from '@entities/html-game/components/marker';
 
 interface Props {
+  model: HtmlGameModel;
   showTemplate?: boolean;
 }
 
-export function Markers({ showTemplate }: Props) {
+export function Markers({ model, showTemplate }: Props) {
   const hrRef = useRef<HTMLObjectElement>(null);
   const omRef = useRef<HTMLObjectElement>(null);
   const swRef = useRef<HTMLObjectElement>(null);
@@ -82,14 +83,14 @@ export function Markers({ showTemplate }: Props) {
   return (
     <>
       {markers.map(({ id, ref, className, style }) => (
-        <Marker key={id} id={id} className={className} ref={ref} style={style} />
+        <Marker model={model} key={id} id={id} className={className} ref={ref} style={style} />
       ))}
-      {showTemplate && <MarkersTemplate />}
+      {showTemplate && <MarkersTemplate model={model} />}
     </>
   );
 }
 
-export function MarkersTemplate() {
+export function MarkersTemplate({ model }: { model: HtmlGameModel }) {
   const markersRects = useStore(model.markersRectsStore);
 
   return (
