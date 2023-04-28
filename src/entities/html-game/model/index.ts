@@ -12,12 +12,12 @@ import {
 import { MarkerTypes, PlayerInfo, MayBeUnique, CompletableMarker } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
 import { CollisionDetector } from '../utils/physics';
-import { useSignal } from '@libs/signal';
+import { MarkersId } from '@api/signals';
 
 export type HtmlGameModel = ReturnType<typeof createModel>;
 
 export function createModel() {
-  const markersSignal = useSignal('MarkersId');
+  const markersSignal = MarkersId.use();
 
   // --> События.
   const setWallsDomRects = setEvent<MayBeUnique<DOMRect>[]>();

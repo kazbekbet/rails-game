@@ -1,10 +1,34 @@
-import { setEvent, setStore } from 're-event';
+import { setEvent, setStore, Store, SetEvent } from 're-event';
+import { buildHistoryMessage } from './utils';
 
-function createSignal() {
-  const send = setEvent<string>();
+interface Signal<Val> {
+  send: SetEvent.Return<Val>;
+  clear: SetEvent.Return<void>;
+  store: Store<Val>;
+  historyStore: Store<History>;
+}
+
+type History = Map<Date, ReturnType<typeof buildHistoryMessage>>;
+
+function createSignal<Val>(initialValue: Val): Signal<Val> {
+  const send = setEvent<Val>();
   const clear = setEvent<void>();
 
-  const store = setStore('')
+  const historyStore = setStore<History>(new Map())
+    .on(send, (state, value) => {
+      const { time, eventName, payload } = buildHistoryMessage('send', value);
+      state.set(time, { time, eventName, payload });
+
+      return state;
+    })
+    .on(clear, state => {
+      const { time, eventName, payload } = buildHistoryMessage('send');
+      state.set(time, { time, eventName, payload });
+
+      return state;
+    });
+
+  const store = setStore(initialValue)
     .on(send, (_, payload) => payload)
     .clear(clear);
 
@@ -12,26 +36,31 @@ function createSignal() {
     send,
     clear,
     store,
+    historyStore,
   };
 }
 
-export const signal = createSignal();
-
 function signalContainer() {
-  const signalsMap = new Map<string, ReturnType<typeof createSignal>>();
+  const signalsMap = new Map<string, Signal<unknown>>();
 
-  function registerSignal(key: string) {
+  function registerSignal<Val>(key: string, initialValue: Val) {
     if (!signalsMap.has(key)) {
-      signalsMap.set(key, createSignal());
+      signalsMap.set(key, createSignal(initialValue as unknown));
     }
   }
 
-  function useSignal(key: string) {
+  function useSignal<Val>(key: string) {
     if (!signalsMap.has(key)) {
-      console.error(`Signal with key: ${key} is not exist! Signal will be created again.`);
-      registerSignal(key);
+      console.error(`
+        Signal with key: ${key} is not exist!
+        Correct signal work is not guaranteed!
+        Signal will be created again.
+      `);
+      // TODO: подумать насчёт спорного момента пересоздания сигнала.
+      registerSignal(key, null);
     }
-    return signalsMap.get(key) as ReturnType<typeof createSignal>;
+
+    return signalsMap.get(key) as Signal<Val>;
   }
 
   return { registerSignal, useSignal };

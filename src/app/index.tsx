@@ -1,9 +1,10 @@
 import { HtmlGame } from '@entities/html-game';
 import { ModalWindow } from '@features/show-modal';
 import { GameContainer } from '@containers/game-container';
-import { registerSignal } from '@libs/signal';
+import { MarkersId, MarkersProgress } from '@api/signals';
 
-registerSignal('MarkersId');
+MarkersId.init();
+MarkersProgress.init();
 
 function App() {
   return (

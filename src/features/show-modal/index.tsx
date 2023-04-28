@@ -1,6 +1,5 @@
 import { ModalContainer } from './ui/modal-container';
 import { createPortal } from 'react-dom';
-import { ModalCounter } from '@features/show-modal/ui/modal-counter';
 import { createModel } from '../show-modal/model';
 import { useMemo } from 'react';
 
@@ -13,7 +12,6 @@ export function ModalWindow() {
     <>
       {createPortal(
         <>
-          <ModalCounter model={model} />
           <ModalContainer model={model} />
         </>,
         modalElement

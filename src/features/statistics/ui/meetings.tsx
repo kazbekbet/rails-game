@@ -1,20 +1,28 @@
 import cn from 'classnames';
 import styles from '../styles/statistics.module.scss';
+import { useMemo } from 'react';
+import { createModel, StatisticsModel } from '../model';
+import { useStore } from 're-event';
 
-export function Meetings() {
+export function Meetings({ model }: { model: StatisticsModel }) {
   return (
     <div className={cn(styles.meetings, styles.container)}>
       <p className={cn(styles.meetings, styles.label)}>Знакомств с коллегами: </p>
       <div>
         <h2 className={cn(styles.meetings, styles.progress)}>
-          <Counter /> из {12}
+          <Counter model={model} />
         </h2>
       </div>
     </div>
   );
 }
 
-function Counter() {
+function Counter({ model }: { model: StatisticsModel }) {
+  const { count, current } = useStore(model.markersProgressStore);
 
-  return <>{5}</>;
+  return (
+    <>
+      {current} из {count}
+    </>
+  );
 }

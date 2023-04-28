@@ -21,6 +21,7 @@
 
     "paths": {
       "@app/*": ["app/*"],
+      "@api/*": ["api/*"],
       "@containers/*": ["containers/*"],
       "@entities/*": ["entities/*"],
       "@features/*": ["features/*"],

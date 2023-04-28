@@ -1,8 +1,8 @@
-import { useSignal } from '@libs/signal';
 import { setComputedStore, setEvent, setStore, redirect } from 're-event';
 import { MarkerTypes } from '@entities/html-game';
 import { MODALS_CONFIG, GAME_FINISHED_MODAL, Modal } from '@libs/rails-lib';
 import { delay } from '@helpers/delay';
+import { MarkersProgress, MarkersId } from '@api/signals';
 
 // --> Маппит конфиг в удобоваримый вид Record<string, object> для поиска модалки по ключу.
 const mappedModalConfig = MODALS_CONFIG.map(element => ({ id: element.id, data: element })).reduce(
@@ -14,12 +14,18 @@ const mappedModalConfig = MODALS_CONFIG.map(element => ({ id: element.id, data: 
 );
 
 export function createModel() {
-  const markersSignal = useSignal('MarkersId');
+  const markersSignal = MarkersId.use();
+  const progressSignal = MarkersProgress.use();
+  handleUpdateProgress();
 
   const closeModal = markersSignal.clear;
   const clearCompletedModals = setEvent<void>();
   const addModalId = setEvent<MarkerTypes>();
   const addCustomModal = setEvent<Modal>();
+
+  function handleUpdateProgress(value = 0) {
+    progressSignal.send({ current: value, count: MODALS_CONFIG.length });
+  }
 
   /** Стор, содержащий список просмотренных модалок. */
   const completedModalIds = setStore<MarkerTypes[]>([])
@@ -30,6 +36,7 @@ export function createModel() {
 
       return modalIds;
     })
+    .watch(completed => handleUpdateProgress(completed.length))
     .clear(clearCompletedModals);
 
   /**
@@ -62,9 +69,7 @@ export function createModel() {
     clearCompletedModals,
     currentModalStore,
     completedModalIds,
-  }
+  };
 }
 
 export type ShowModalModel = ReturnType<typeof createModel>;
-
-
