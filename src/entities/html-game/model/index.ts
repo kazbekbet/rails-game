@@ -8,6 +8,10 @@ import {
   PlayerInfoTemplate,
   ValidKey,
   MarkersList,
+  ShiftSpeedPx,
+  LetterKeys,
+  AccelerationKeys,
+  ShiftKeys,
 } from '../constants';
 import { MarkerTypes, PlayerInfo, MayBeUnique, CompletableMarker } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
@@ -54,32 +58,73 @@ export function createModel() {
   }
 
   function handleCompleteMarker(id: string) {
-    if (MarkersList.includes(id as MarkerTypes)) {
+    if (MarkersList.has(id as MarkerTypes)) {
       setMarkerComplete(id as MarkerTypes);
     }
   }
 
   function handleKeyDown(event: KeyboardEvent) {
     event.preventDefault();
-    if (isGameReady() && AllowedKeysList.includes(event.code)) {
-      const keyCode = event.code as ValidKey;
-      const { Up, Right, Down, Left } = AllowedKeys;
 
+    if (isGameReady()) {
+      if (AllowedKeysList.has(event.code as ValidKey)) {
+        const keyCode = event.code as ValidKey;
+
+        startMoving(keyCode);
+        playerMovingMapper(keyCode, event.shiftKey);
+        return;
+      }
+
+      if (AccelerationKeys.has(event.code as ShiftKeys)) {
+        const keyCode = event.code as ValidKey;
+        const lastMovingKey = currentKeyStore.getState();
+
+        if (lastMovingKey) {
+          startMoving(lastMovingKey);
+          playerMovingMapper(lastMovingKey, true);
+        }
+        return;
+      }
+    }
+  }
+
+  /** Маппит возвожные пути перемещения в зависимости от кнопки. */
+  function playerMovingMapper(key: ValidKey, isAccelerationNeeded: boolean) {
+    const { Up, Right, Down, Left } = AllowedKeys;
+
+    if (Up.has(key)) {
+      handleMove({ moveFn: moveUp, isAccelerationNeeded, stopDirection: 'top' });
+    }
+    if (Right.has(key)) {
+      handleMove({ moveFn: moveRight, isAccelerationNeeded, stopDirection: 'right' });
+    }
+    if (Down.has(key)) {
+      handleMove({ moveFn: moveDown, isAccelerationNeeded, stopDirection: 'bottom' });
+    }
+    if (Left.has(key)) {
+      handleMove({ moveFn: moveLeft, isAccelerationNeeded, stopDirection: 'left' });
+    }
+  }
+
+  function handleMove({
+    moveFn,
+    isAccelerationNeeded,
+    stopDirection,
+  }: {
+    moveFn: Function;
+    isAccelerationNeeded: boolean;
+    stopDirection: 'top' | 'right' | 'bottom' | 'left';
+  }) {
+    if (isAccelerationNeeded) {
+      for (let i = 0; i < ShiftSpeedPx; i++) {
+        const { direction } = playerCollisionStore.getState();
+
+        if (direction?.[stopDirection]) break;
+        moveFn();
+      }
+    } else {
       const { direction } = playerCollisionStore.getState();
-
-      startMoving(keyCode);
-      if (Up.includes(keyCode)) {
-        !direction?.top && moveUp();
-      }
-      if (Right.includes(keyCode)) {
-        !direction?.right && moveRight();
-      }
-      if (Down.includes(keyCode)) {
-        !direction?.bottom && moveDown();
-      }
-      if (Left.includes(keyCode)) {
-        !direction?.left && moveLeft();
-      }
+      if (!direction?.[stopDirection]) moveFn();
     }
   }
 
@@ -155,8 +200,9 @@ export function createModel() {
   });
 
   /** Стор, содержайщий последнюю нажатую кнопку. */
-  const currentKeyStore = setStore<ValidKey>(ArrowKeys.ArrowUp)
+  const currentKeyStore = setStore<ValidKey | null>(ArrowKeys.ArrowUp)
     .on(startMoving, (_, payload) => payload)
+    .on(stopMoving, _ => null)
     .clear(clearAll);
 
   /**
@@ -193,7 +239,8 @@ export function createModel() {
   /** Вычисляемый стор, содержащий текущий css класс, соответствующий направлению игрока. */
   const moveCssClassStore = setComputedStore({
     store: currentKeyStore,
-    transform: key => MapMoveStylesByKey[key],
+    condition: key => Boolean(key),
+    transform: key => (key ? MapMoveStylesByKey[key] : ArrowKeys.ArrowUp),
   });
 
   /** Вычисляемый стор, содержащий стиль с позиционированием игрока. */

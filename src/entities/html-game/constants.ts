@@ -19,6 +19,12 @@ export enum LetterKeys {
   KeyS = 'KeyS',
 }
 
+/** Кнопки - shift. */
+export enum ShiftKeys {
+    ShiftLeft = 'ShiftLeft',
+    ShiftRight = 'ShiftRight',
+}
+
 /** Начальный (нулевой) шаблон информации об игроке. */
 export const PlayerInfoTemplate: PlayerInfo = {
   x: -100,
@@ -35,17 +41,20 @@ export const PlayerInfoTemplate: PlayerInfo = {
 
 /** Доступные кнопки для передвижения в зависимости от направления. */
 export const AllowedKeys = {
-  Right: [ArrowKeys.ArrowRight, LetterKeys.KeyD],
-  Left: [ArrowKeys.ArrowLeft, LetterKeys.KeyA],
-  Up: [ArrowKeys.ArrowUp, LetterKeys.KeyW],
-  Down: [ArrowKeys.ArrowDown, LetterKeys.KeyS],
+  Right: new Set([ArrowKeys.ArrowRight, LetterKeys.KeyD]),
+  Left: new Set([ArrowKeys.ArrowLeft, LetterKeys.KeyA]),
+  Up: new Set([ArrowKeys.ArrowUp, LetterKeys.KeyW]),
+  Down: new Set([ArrowKeys.ArrowDown, LetterKeys.KeyS]),
 };
 
 /** Доступные кнопки для передвижения (используется для проверки). */
-export const AllowedKeysList: string[] = Object.values(AllowedKeys).reduce((prev, curr) => {
-  prev.push(...curr);
-  return prev;
-}, []);
+export const AllowedKeysList: Set<ArrowKeys | LetterKeys> = Object.values(AllowedKeys).reduce((prev, curr) => {
+    curr.forEach(key => prev.add(key));
+    return prev;
+}, new Set());
+
+/** Список кнопок для ускорения. */
+export const AccelerationKeys = new Set(Object.values(ShiftKeys));
 
 /** Зависимость стилей от нажатой кнопки. */
 export const MapMoveStylesByKey = {
@@ -61,7 +70,10 @@ export const MapMoveStylesByKey = {
 } as const;
 
 /** Список маркеров. */
-export const MarkersList = Object.values(MarkerTypes);
+export const MarkersList = new Set(Object.values(MarkerTypes));
 
 /** Скорость передвижения в px. */
 export const MovementDeltaPx = 1;
+
+/** Скорость передвижения при нажатой клавише shift. */
+export const ShiftSpeedPx = 5;
