@@ -13,4 +13,10 @@ export enum MarkerTypes {
   Analyst = 'analyst',
 }
 
-export type MayBeUnique<T> = { rect: T } & { uniqueId?: string };
+export enum ObstacleTypes {
+  Wall = 'wall',
+  Coin = 'coin',
+  Marker = 'marker',
+}
+
+export type Obstacle<T> = { rect: T } & { uniqueId?: string; isThroughElement?: boolean, type?: ObstacleTypes };

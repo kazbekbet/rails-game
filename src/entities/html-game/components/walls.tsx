@@ -19,7 +19,7 @@ export const Walls = forwardRef(({ model, showTemplate }: Props, ref: ForwardedR
       <object
         id="walls"
         ref={ref}
-        className={styles.walls}
+        className={classNames(styles.transparentMaps, styles.walls)}
         // --> Костыль, который исправляет баг остановки передвижения после клика по документу.
         // По большому счёту нам больше не нужен object после того, как мы установили все стены в стор.
         style={{ display: isWallsSetted ? 'none' : 'block' }}
