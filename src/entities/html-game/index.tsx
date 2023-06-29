@@ -6,14 +6,16 @@ import { Player } from '@entities/html-game/components/player';
 import { Walls } from '@entities/html-game/components/walls';
 import { createModel } from '@entities/html-game/model';
 import { useKeysSubscription } from '@entities/html-game/utils/use-keys-subscription';
-import { useWallsRects } from '@entities/html-game/utils/use-walls-dom-rects';
+import { useInvisibleRects } from '@entities/html-game/utils/use-invisible-rects';
 import { usePlayerRect } from '@entities/html-game/utils/use-player-rect';
 import { MarkerTypes } from './interfaces';
+import { CoinsMap } from '@entities/html-game/components/coins-map';
 
 function HtmlGame() {
   const model = useMemo(createModel, []);
 
   const wallsRef = useRef<HTMLObjectElement>(null);
+  const coinsMapRef = useRef<HTMLObjectElement>(null);
   const playerRef = useRef<HTMLObjectElement>(null);
 
   useKeysSubscription({
@@ -27,13 +29,19 @@ function HtmlGame() {
     playerRef,
   });
 
-  useWallsRects({
+  useInvisibleRects({
     onSetRects: model.handleSetWallsRects,
-    wallsRef,
+    ref: wallsRef,
+  });
+
+  useInvisibleRects({
+    onSetRects: model.handleSetCoinsRects,
+    ref: coinsMapRef,
   });
 
   return (
     <div className={styles.app}>
+      <CoinsMap model={model} ref={coinsMapRef} />
       <Map />
       <Markers model={model} />
       <Player ref={playerRef} model={model} />

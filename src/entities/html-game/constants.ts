@@ -1,5 +1,6 @@
 import { MarkerTypes, PlayerInfo } from './interfaces';
 import styles from './styles/html-game.module.scss';
+import coinsSound from '@assets/sounds/comp_coin.wav';
 
 export type ValidKey = ArrowKeys | LetterKeys;
 
@@ -77,3 +78,6 @@ export const MovementDeltaPx = 1;
 
 /** Скорость передвижения при нажатой клавише shift. */
 export const ShiftSpeedPx = 5;
+
+/** Звук сбора монеты. */
+export const CoinsCollectSound = new Audio(coinsSound);

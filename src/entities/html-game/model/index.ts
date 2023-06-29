@@ -1,32 +1,34 @@
 import { setComputedStore, setEvent, setStore } from 're-event';
 import {
-  ArrowKeys,
+  AccelerationKeys,
   AllowedKeys,
   AllowedKeysList,
+  ArrowKeys,
+  CoinsCollectSound,
   MapMoveStylesByKey,
+  MarkersList,
   MovementDeltaPx,
   PlayerInfoTemplate,
-  ValidKey,
-  MarkersList,
-  ShiftSpeedPx,
-  LetterKeys,
-  AccelerationKeys,
   ShiftKeys,
+  ShiftSpeedPx,
+  ValidKey,
 } from '../constants';
-import { MarkerTypes, PlayerInfo, MayBeUnique, CompletableMarker } from '../interfaces';
+import { CompletableMarker, MarkerTypes, Obstacle, ObstacleTypes, PlayerInfo } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
 import { CollisionDetector } from '../utils/physics';
-import { MarkersId } from '@api/signals';
+import { CoinsProgress, MarkersId } from '@api/signals';
 
 export type HtmlGameModel = ReturnType<typeof createModel>;
 
 export function createModel() {
   const markersSignal = MarkersId.use();
+  const coinsProgressSignal = CoinsProgress.use();
 
   // --> События.
-  const setWallsDomRects = setEvent<MayBeUnique<DOMRect>[]>();
+  const setWallsDomRects = setEvent<Obstacle<DOMRect>[]>();
+  const setCoinsDomRects = setEvent<Obstacle<DOMRect>[]>();
   const setInitialPlayerInfo = setEvent<PlayerInfo>();
-  const setMarkersRefs = setEvent<MayBeUnique<DOMRect>[]>();
+  const setMarkersRefs = setEvent<Obstacle<DOMRect>[]>();
   const setMarkerComplete = setEvent<MarkerTypes>();
 
   const moveUp = setEvent<void>();
@@ -37,6 +39,7 @@ export function createModel() {
   const startMoving = setEvent<ValidKey>();
   const stopMoving = setEvent<void>();
 
+  const removeCoin = setEvent<string>();
   const clearAll = setEvent<void>();
 
   // --> Обработчики
@@ -44,22 +47,49 @@ export function createModel() {
     const mappedRects = Array.from(svgRects).map((rect, index) => ({
       rect: rect.getBoundingClientRect().toJSON(),
       uniqueId: `wall_${index}`,
+      type: ObstacleTypes.Wall,
     }));
 
     setWallsDomRects(mappedRects);
+  }
+
+  function handleSetCoinsRects(svgRects: NodeListOf<SVGRectElement>) {
+    const mappedRects = Array.from(svgRects).map((rect, index) => ({
+      rect: rect.getBoundingClientRect().toJSON(),
+      uniqueId: `coin_${index}`,
+      isThroughElement: true,
+      type: ObstacleTypes.Coin,
+    }));
+
+    setCoinsDomRects(mappedRects);
   }
 
   function handleSetPlayerInitialInfo(domInfo: DOMRect) {
     setInitialPlayerInfo(mapPlayerInfo(PlayerInfoTemplate, domInfo));
   }
 
-  function handleSetMarkersRects(markers: MayBeUnique<DOMRect>[]) {
+  function handleSetMarkersRects(markers: Obstacle<DOMRect>[]) {
     setMarkersRefs(markers);
   }
 
   function handleCompleteMarker(id: string) {
     if (MarkersList.has(id as MarkerTypes)) {
       setMarkerComplete(id as MarkerTypes);
+    }
+  }
+
+  function handleCheckCollidedObstacle(obstacle: Obstacle<DOMRect> | null) {
+    if (obstacle && obstacle.uniqueId && obstacle.type) {
+      if (obstacle.type === ObstacleTypes.Marker) {
+        markersSignal.send(obstacle.uniqueId);
+        handleCompleteMarker(obstacle.uniqueId);
+      }
+
+      if (obstacle.type === ObstacleTypes.Coin) {
+        CoinsCollectSound.play();
+        removeCoin(obstacle.uniqueId);
+        coinsProgressSignal.send(1);
+      }
     }
   }
 
@@ -135,16 +165,22 @@ export function createModel() {
 
   function isGameReady() {
     const isWallsSetted = isWallsSettedStore.getState();
+    const isCoinsSetted = isCoinsSettedStore.getState();
     const isUserInfoSetted = playerInfoStore.getState().isInitialInfoSetted;
     const isMarkersSetted = markersRectsStore.getState().length > 0;
 
-    return isWallsSetted && isUserInfoSetted && isMarkersSetted;
+    return isWallsSetted && isCoinsSetted && isUserInfoSetted && isMarkersSetted;
   }
 
   // --> Сторы.
   /** Стор с координатами всех стен. */
-  const wallsDomRectsStore = setStore<MayBeUnique<DOMRect>[]>([])
+  const wallsDomRectsStore = setStore<Obstacle<DOMRect>[]>([])
     .on(setWallsDomRects, (_, payload) => payload)
+    .clear(clearAll);
+
+  const coinsDomRectsStore = setStore<Obstacle<DOMRect>[]>([])
+    .on(setCoinsDomRects, (_, payload) => payload)
+    .on(removeCoin, (coins, coinId) => coins.filter(coin => coin.uniqueId !== coinId))
     .clear(clearAll);
 
   /** Стор с информацией об игроке (его позиционирование и размеры). */
@@ -177,7 +213,7 @@ export function createModel() {
     .clear(clearAll);
 
   /** Стор с координатами и информацией о маркерах. */
-  const markersRectsStore = setStore<MayBeUnique<DOMRect>[]>([])
+  const markersRectsStore = setStore<Obstacle<DOMRect>[]>([])
     .on(setMarkersRefs, (_, payload) => payload)
     .clear(clearAll);
 
@@ -213,16 +249,12 @@ export function createModel() {
     store: playerInfoStore,
     transform: playerInfo => {
       const walls = wallsDomRectsStore.getState();
+      const coins = coinsDomRectsStore.getState();
       const markers = markersRectsStore.getState();
 
-      return new CollisionDetector(walls, markers).detectCollision(playerInfo);
+      return new CollisionDetector([...walls, ...coins, ...Array.from(markers.values())]).detectCollision(playerInfo);
     },
-  }).watch(({ object }) => {
-    if (object?.uniqueId) {
-      markersSignal.send(object.uniqueId);
-      handleCompleteMarker(object.uniqueId);
-    }
-  });
+  }).watch(({ object }) => handleCheckCollidedObstacle(object));
 
   /** Вспомогательный стор, отвечающий на вопрос двигается ли игрок в данный момент. */
   const isPlayerMovingStore = setStore(false)
@@ -233,6 +265,12 @@ export function createModel() {
   /** Вспомогательный стор, отвечающий на вопрос получены ли координаты всех стен. */
   const isWallsSettedStore = setComputedStore({
     store: wallsDomRectsStore,
+    transform: value => value.length > 0,
+  });
+
+  /** Вспомогательный стор, отвечающий на вопрос получены ли координаты всех монет на карте. */
+  const isCoinsSettedStore = setComputedStore({
+    store: coinsDomRectsStore,
     transform: value => value.length > 0,
   });
 
@@ -251,16 +289,19 @@ export function createModel() {
 
   return {
     handleSetWallsRects,
+    handleSetCoinsRects,
     handleSetPlayerInitialInfo,
     handleSetMarkersRects,
     handleCompleteMarker,
     handleKeyDown,
     handleKeyUp,
     wallsDomRectsStore,
+    coinsDomRectsStore,
     markersRectsStore,
     markersIsCompletedStore,
     isPlayerMovingStore,
     isWallsSettedStore,
+    isCoinsSettedStore,
     moveCssClassStore,
     playerStyleStore,
   };

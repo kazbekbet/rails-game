@@ -1,25 +1,41 @@
 @import "@styles/common.scss";
 
+.statisticsContainer {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
 .meetings {
   color: white;
 }
 
+.coins {
+  color: white;
+}
+
 .meetings.container {
-  position: absolute;
   background-color: transparentize($accent-color, .25);
   border: $accent-color .25rem solid;
+  margin: .5rem;
   padding: 0 1rem 0 1rem;
-  top: 1rem;
-  right: 1rem;
   border-radius: 1rem;
 }
 
-.meetings.label {
+.label {
   font-family: sans-serif;
   font-weight: lighter;
 }
 
-.meetings.progress {
+.progress {
   text-align: right;
   font-family: sans-serif;
+}
+
+.coins.container {
+  background-color: transparentize($green-color, .25);
+  border: $green-color .25rem solid;
+  padding: 0 1rem 0 1rem;
+  margin: .5rem;
+  border-radius: 1rem;
 }

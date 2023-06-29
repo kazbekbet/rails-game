@@ -1,8 +1,8 @@
 import { RefObject, useEffect } from 'react';
-import { MarkerTypes, MayBeUnique } from '../interfaces';
+import {MarkerTypes, ObstacleTypes, Obstacle} from '../interfaces';
 
 interface Props {
-  onSetRects: (rectMap: MayBeUnique<DOMRect>[]) => unknown;
+  onSetRects: (rectMap: Obstacle<DOMRect>[]) => unknown;
   refs: Record<MarkerTypes, RefObject<HTMLObjectElement>>;
 }
 
@@ -15,9 +15,10 @@ export function useMarkersRect({ refs, onSetRects }: Props) {
       .every(ref => ref);
 
     if (isRefsReceived) {
-      const mappedRefsToRect: MayBeUnique<DOMRect>[] = Object.entries(refs).map(([key, ref]) => ({
+      const mappedRefsToRect: Obstacle<DOMRect>[] = Object.entries(refs).map(([key, ref]) => ({
         uniqueId: key,
         rect: ref.current!.getBoundingClientRect(),
+        type: ObstacleTypes.Marker,
       }));
 
       onSetRects(mappedRefsToRect);

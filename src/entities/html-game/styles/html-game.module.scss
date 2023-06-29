@@ -11,12 +11,20 @@
   height: 100%;
 }
 
-.walls {
+.transparentMaps {
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
   opacity: 0;
+}
+
+.transparentMaps.walls {}
+
+.transparentMaps.coinsMap {}
+
+.coin {
+  background-image: url("@assets/animation/stay/frame_0.png");
 }
 
 .marker,
