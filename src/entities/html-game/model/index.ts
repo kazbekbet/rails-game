@@ -16,13 +16,13 @@ import {
 import { CompletableMarker, MarkerTypes, Obstacle, ObstacleTypes, PlayerInfo } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
 import { CollisionDetector } from '../utils/physics';
-import { CoinsProgress, MarkersId } from '@api/signals';
+import { CoinsCollectNotifier, MarkersId } from '@api/signals';
 
 export type HtmlGameModel = ReturnType<typeof createModel>;
 
 export function createModel() {
   const markersSignal = MarkersId.use();
-  const coinsProgressSignal = CoinsProgress.use();
+  const coinsCollectSignal = CoinsCollectNotifier.use();
 
   // --> События.
   const setWallsDomRects = setEvent<Obstacle<DOMRect>[]>();
@@ -88,7 +88,7 @@ export function createModel() {
       if (obstacle.type === ObstacleTypes.Coin) {
         CoinsCollectSound.play();
         removeCoin(obstacle.uniqueId);
-        coinsProgressSignal.send(1);
+        coinsCollectSignal.send(1);
       }
     }
   }

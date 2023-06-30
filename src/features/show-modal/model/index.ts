@@ -2,7 +2,7 @@ import { setComputedStore, setEvent, setStore, redirect } from 're-event';
 import { MarkerTypes } from '@entities/html-game';
 import { MODALS_CONFIG, GAME_FINISHED_MODAL, Modal } from '@libs/rails-lib';
 import { delay } from '@helpers/delay';
-import { MarkersProgress, MarkersId } from '@api/signals';
+import { MarkersProgress, MarkersId, CoinsProgress } from '@api/signals';
 
 // --> Маппит конфиг в удобоваримый вид Record<string, object> для поиска модалки по ключу.
 const mappedModalConfig = MODALS_CONFIG.map(element => ({ id: element.id, data: element })).reduce(
@@ -16,6 +16,7 @@ const mappedModalConfig = MODALS_CONFIG.map(element => ({ id: element.id, data: 
 export function createModel() {
   const markersSignal = MarkersId.use();
   const progressSignal = MarkersProgress.use();
+  const coinsProgress = CoinsProgress.use();
   handleUpdateProgress();
 
   const closeModal = markersSignal.clear;
@@ -62,7 +63,9 @@ export function createModel() {
 
       return completedModalsLength === allModalsLength;
     })
-    .watch(isFinished => isFinished && addCustomModal(GAME_FINISHED_MODAL));
+    .watch(
+      isFinished => isFinished && addCustomModal(GAME_FINISHED_MODAL({ coinsProgress: coinsProgress.store.getState() }))
+    );
 
   return {
     closeModal,

@@ -200,7 +200,7 @@ export const MODALS_CONFIG: Modal[] = [
   },
 ];
 
-export const GAME_FINISHED_MODAL: Modal = {
+export const GAME_FINISHED_MODAL = (props: { coinsProgress: number }): Modal => ({
   id: 'finish',
   title: (
     <Line time={1} delay={0.25}>
@@ -212,7 +212,7 @@ export const GAME_FINISHED_MODAL: Modal = {
       <Column>
         <StaticContent>
           {[
-            'Ты молодец!',
+            `Ты молодец! Собрано ${props.coinsProgress} монет!`,
             'В процессе игры ты познакомился с коллегами:',
             '• Backend разработчиком Машей',
             '• HR специалистом Сашей',
@@ -249,4 +249,4 @@ export const GAME_FINISHED_MODAL: Modal = {
       Пройти опрос
     </Button>
   ),*/
-};
+});

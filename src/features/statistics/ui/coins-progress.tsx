@@ -3,6 +3,7 @@ import styles from '../styles/statistics.module.scss';
 import { useMemo } from 'react';
 import { createModel, StatisticsModel } from '../model';
 import { useStore } from 're-event';
+import coin from '@assets/coin.svg';
 
 export function CoinsProgress({ model }: { model: StatisticsModel }) {
   return (
@@ -11,6 +12,7 @@ export function CoinsProgress({ model }: { model: StatisticsModel }) {
       <div>
         <h2 className={cn(styles.coins, styles.progress)}>
           <Counter model={model} />
+          <img className={styles.coinImage} src={coin} />
         </h2>
       </div>
     </div>

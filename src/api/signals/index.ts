@@ -36,6 +36,23 @@ export namespace MarkersProgress {
   }
 }
 
+export namespace CoinsCollectNotifier {
+  export const alias = 'CoinsCollectNotifier';
+
+  export function init() {
+    registerSignal<number>(alias, 0);
+  }
+
+  export function use() {
+    return useSignal<number>(alias);
+  }
+
+  export function watchHistory() {
+    const { historyStore } = useSignal<number>(alias);
+    historyStore.watch(history => console.log(`💥 Signal: ${alias}`, history));
+  }
+}
+
 export namespace CoinsProgress {
   export const alias = 'CoinsProgress';
 

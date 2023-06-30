@@ -1,10 +1,11 @@
 import { HtmlGame } from '@entities/html-game';
 import { ModalWindow } from '@features/show-modal';
 import { GameContainer } from '@containers/game-container';
-import { CoinsProgress, MarkersId, MarkersProgress } from '@api/signals';
+import { CoinsCollectNotifier, MarkersId, MarkersProgress, CoinsProgress } from '@api/signals';
 
 MarkersId.init();
 MarkersProgress.init();
+CoinsCollectNotifier.init();
 CoinsProgress.init();
 
 function App() {
