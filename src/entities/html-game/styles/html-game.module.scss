@@ -54,12 +54,10 @@
   height: 26px;
   top: calc(100% - 160px);
   left: 736px;
-  background-image: url("@assets/animation/stay/frame_0.png");
   background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  transition: transform 0.25s ease;
-  overflow: hidden;
+  background-image: 
+  url("@assets/animation/characterSprite.png");
+  will-change: left, top;
 }
 
 @keyframes frame-animation {
@@ -70,24 +68,12 @@
 
 /* Анимация движения - начало ------------*/
 .player.move {
-  animation: player-walk-animation .75s infinite;
+  animation: player-walk-animation 0.75s steps(4) infinite;
 }
 
 @keyframes player-walk-animation {
-  0% {
-    background-image: url("@assets/animation/walk/frame_0.png");
-  }
-  25% {
-    background-image: url("@assets/animation/walk/frame_1.png");
-  }
-  50% {
-    background-image: url("@assets/animation/walk/frame_0.png");
-  }
-  75% {
-    background-image: url("@assets/animation/walk/frame_2.png");
-  }
   100% {
-    background-image: url("@assets/animation/walk/frame_3.png");
+    background-position: -100% 0;
   }
 }
 
