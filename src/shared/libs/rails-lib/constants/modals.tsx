@@ -6,12 +6,11 @@ import pmoVideo from '../assets/video/pmo.mp4';
 import backVideo from '../assets/video/back.mp4';
 import testVideo from '../assets/video/test.mp4';
 import analystVideo from '../assets/video/analyst.mp4';
-import { DialogLine } from '../components/Speech';
 import { Line, Speech } from '../components';
 import { Column, Wrapper } from '../styled/dialogs';
-import { TextContent } from '../styled/dialogs';
 import { StaticContent } from '../components/Modal/StaticContent';
-import { Button } from '../styled/common';
+import { VideoDownloadStatusProvider } from '../providers/VideoDownloadStatusProvider';
+import { Video, VideoDownloadStatusWrapper } from '@libs/rails-lib/components/Video';
 
 export interface Modal {
   id: string;
@@ -31,21 +30,23 @@ export const MODALS_CONFIG: Modal[] = [
       </Line>
     ),
     children: (
-      <Wrapper>
-        <Column>
-          <video src={hrVideo} autoPlay></video>
-        </Column>
-        <Column>
-          <Speech delay={1.5}>
-            {[
-              'HR-специалист — первый человек, которого ты встретишь',
-              'при знакомстве со своим новым местом работы.',
-              'Коллеги из HR помогут тебе с адаптацией, а ещё подробно расскажут о твоей роли',
-              'в компании и о том, как всё устроено!',
-            ]}
-          </Speech>
-        </Column>
-      </Wrapper>
+      <VideoDownloadStatusProvider>
+        <Wrapper>
+          <Column>
+            <Video src={hrVideo} />
+          </Column>
+          <Column>
+            <VideoDownloadStatusWrapper delay={1.5} component={Speech}>
+              {[
+                'HR-специалист — первый человек, которого ты встретишь',
+                'при знакомстве со своим новым местом работы.',
+                'Коллеги из HR помогут тебе с адаптацией, а ещё подробно расскажут о твоей роли',
+                'в компании и о том, как всё устроено!',
+              ]}
+            </VideoDownloadStatusWrapper>
+          </Column>
+        </Wrapper>
+      </VideoDownloadStatusProvider>
     ),
   },
   {
@@ -56,12 +57,12 @@ export const MODALS_CONFIG: Modal[] = [
       </Line>
     ),
     children: (
-      <Wrapper>
+      <VideoDownloadStatusProvider>
         <Column>
-          <video src={omVideo} autoPlay></video>
+          <Video src={omVideo} />
         </Column>
         <Column>
-          <Speech delay={1.5}>
+          <VideoDownloadStatusWrapper delay={1.5} component={Speech}>
             {[
               'Офис-менеджер - это второй человек,',
               'которого ты встретишь в ходе своего трудоустройства:',
@@ -70,9 +71,9 @@ export const MODALS_CONFIG: Modal[] = [
               'и готовит пропуска для всех сотрудников.',
               'Именно он и вручит тебе твой пропуск в компанию.',
             ]}
-          </Speech>
+          </VideoDownloadStatusWrapper>
         </Column>
-      </Wrapper>
+      </VideoDownloadStatusProvider>
     ),
   },
   {
@@ -83,20 +84,22 @@ export const MODALS_CONFIG: Modal[] = [
       </Line>
     ),
     children: (
-      <Wrapper>
-        <Column>
-          <video src={swVideo} autoPlay></video>
-        </Column>
-        <Column>
-          <Speech delay={1.5}>
-            {[
-              'Коллеги из команды тех.поддержки предоставляют оборудование сотрудникам,',
-              'занимаются созданием корпоративной учетной записи,',
-              'а также предоставляют доступы к необходимым корпоративным сервисам.',
-            ]}
-          </Speech>
-        </Column>
-      </Wrapper>
+      <VideoDownloadStatusProvider>
+        <Wrapper>
+          <Column>
+            <Video src={swVideo} />
+          </Column>
+          <Column>
+            <VideoDownloadStatusWrapper delay={1.5} component={Speech}>
+              {[
+                'Коллеги из команды тех.поддержки предоставляют оборудование сотрудникам,',
+                'занимаются созданием корпоративной учетной записи,',
+                'а также предоставляют доступы к необходимым корпоративным сервисам.',
+              ]}
+            </VideoDownloadStatusWrapper>
+          </Column>
+        </Wrapper>
+      </VideoDownloadStatusProvider>
     ),
   },
   {
@@ -107,20 +110,22 @@ export const MODALS_CONFIG: Modal[] = [
       </Line>
     ),
     children: (
-      <Wrapper>
-        <Column>
-          <video src={pmoVideo} autoPlay></video>
-        </Column>
-        <Column>
-          <Speech delay={1.5}>
-            {[
-              'PMO специалист - это помошник менеджера проекта.',
-              'Его основная задача - администрирование и координация задач внутри команды,',
-              'а также контроль сроков их выполнения',
-            ]}
-          </Speech>
-        </Column>
-      </Wrapper>
+      <VideoDownloadStatusProvider>
+        <Wrapper>
+          <Column>
+            <Video src={pmoVideo} />
+          </Column>
+          <Column>
+            <VideoDownloadStatusWrapper delay={1.5} component={Speech}>
+              {[
+                'PMO специалист - это помошник менеджера проекта.',
+                'Его основная задача - администрирование и координация задач внутри команды,',
+                'а также контроль сроков их выполнения',
+              ]}
+            </VideoDownloadStatusWrapper>
+          </Column>
+        </Wrapper>
+      </VideoDownloadStatusProvider>
     ),
   },
   {
@@ -131,20 +136,22 @@ export const MODALS_CONFIG: Modal[] = [
       </Line>
     ),
     children: (
-      <Wrapper>
-        <Column>
-          <video src={backVideo} autoPlay></video>
-        </Column>
-        <Column>
-          <Speech delay={1.5}>
-            {[
-              'Backend разработчик -  пишет код, ',
-              'проверяет его на качество и участвует в ',
-              'дальнейшем сопровождении, если это необходимо ',
-            ]}
-          </Speech>
-        </Column>
-      </Wrapper>
+      <VideoDownloadStatusProvider>
+        <Wrapper>
+          <Column>
+            <Video src={backVideo} />
+          </Column>
+          <Column>
+            <VideoDownloadStatusWrapper delay={1.5} component={Speech}>
+              {[
+                'Backend разработчик -  пишет код, ',
+                'проверяет его на качество и участвует в ',
+                'дальнейшем сопровождении, если это необходимо ',
+              ]}
+            </VideoDownloadStatusWrapper>
+          </Column>
+        </Wrapper>
+      </VideoDownloadStatusProvider>
     ),
   },
   {
@@ -155,20 +162,22 @@ export const MODALS_CONFIG: Modal[] = [
       </Line>
     ),
     children: (
-      <Wrapper>
-        <Column>
-          <video src={testVideo} autoPlay></video>
-        </Column>
-        <Column>
-          <Speech delay={1.5}>
-            {[
-              'Тестер: коллеги из практики тестирования ',
-              'проверяют качество разрабатываемого продукта, ',
-              'а также осуществляют поиск, анализ и регистрацию дефектов',
-            ]}
-          </Speech>
-        </Column>
-      </Wrapper>
+      <VideoDownloadStatusProvider>
+        <Wrapper>
+          <Column>
+            <Video src={testVideo} />
+          </Column>
+          <Column>
+            <VideoDownloadStatusWrapper delay={1.5} component={Speech}>
+              {[
+                'Тестер: коллеги из практики тестирования ',
+                'проверяют качество разрабатываемого продукта, ',
+                'а также осуществляют поиск, анализ и регистрацию дефектов',
+              ]}
+            </VideoDownloadStatusWrapper>
+          </Column>
+        </Wrapper>
+      </VideoDownloadStatusProvider>
     ),
   },
   {
@@ -179,23 +188,25 @@ export const MODALS_CONFIG: Modal[] = [
       </Line>
     ),
     children: (
-      <Wrapper>
-        <Column>
-          <video src={analystVideo} autoPlay></video>
-        </Column>
-        <Column>
-          <Speech delay={1.5}>
-            {[
-              'Бизнес аналитик - связующее звено между заказчиком и командой разработки:',
-              'Он собирает пожелания заказчика, оформляет по ним технические требования.',
-              'Требования берет в работу команда разработки, а также по ним',
-              'проводится тестирование программного продукта.',
-              'Также аналитик контролирует процесс разработки, и проводит',
-              'демонстрации реализованного функционала клиентам :)',
-            ]}
-          </Speech>
-        </Column>
-      </Wrapper>
+      <VideoDownloadStatusProvider>
+        <Wrapper>
+          <Column>
+            <Video src={analystVideo} />
+          </Column>
+          <Column>
+            <VideoDownloadStatusWrapper delay={1.5} component={Speech}>
+              {[
+                'Бизнес аналитик - связующее звено между заказчиком и командой разработки:',
+                'Он собирает пожелания заказчика, оформляет по ним технические требования.',
+                'Требования берет в работу команда разработки, а также по ним',
+                'проводится тестирование программного продукта.',
+                'Также аналитик контролирует процесс разработки, и проводит',
+                'демонстрации реализованного функционала клиентам :)',
+              ]}
+            </VideoDownloadStatusWrapper>
+          </Column>
+        </Wrapper>
+      </VideoDownloadStatusProvider>
     ),
   },
 ];
@@ -239,14 +250,14 @@ export const GAME_FINISHED_MODAL = (props: { coinsProgress: number }): Modal => 
   ),
   customFooter: <></>,
   /*
-  TODO: вернуть как появится ссылка.
-  customFooter: (
-    <Button
-      onClick={() => {
-        window.open('https://www.google.com/intl/ru/forms/about/', '_blank');
-      }}
-    >
-      Пройти опрос
-    </Button>
-  ),*/
+                                      TODO: вернуть как появится ссылка.
+                                      customFooter: (
+                                        <Button
+                                          onClick={() => {
+                                            window.open('https://www.google.com/intl/ru/forms/about/', '_blank');
+                                          }}
+                                        >
+                                          Пройти опрос
+                                        </Button>
+                                      ),*/
 });
