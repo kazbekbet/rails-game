@@ -19,4 +19,13 @@ export enum ObstacleTypes {
   Marker = 'marker',
 }
 
-export type Obstacle<T> = { rect: T } & { uniqueId?: string; isThroughElement?: boolean, type?: ObstacleTypes };
+interface Collectable {
+  show: boolean;
+}
+
+export type Obstacle<T> = { rect: T } & {
+  uniqueId?: string;
+  isThroughElement?: boolean;
+  type?: ObstacleTypes;
+  collectable?: Collectable;
+};

@@ -19,14 +19,6 @@
   opacity: 0;
 }
 
-.transparentMaps.walls {}
-
-.transparentMaps.coinsMap {}
-
-.coin {
-  background-image: url("@assets/animation/stay/frame_0.png");
-}
-
 .marker,
 .player {
   position: absolute;
@@ -49,24 +41,36 @@
   border: $green-color .125rem solid;
 }
 
+/* Монетка с анимацией исчезновения */
+.coin {
+  position: absolute;
+  background-image: url("@assets/coinSprite.png");
+  background-size: cover;
+  will-change: left, top;
+}
+
+.coin.collected {
+  opacity: 0;
+  animation: coin-collect-animation 0.75s steps(2) infinite;
+}
+
+@keyframes coin-collect-animation {
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* Игрок с анимацией ходьбы */
 .player {
   width: 26px;
   height: 26px;
   top: calc(100% - 160px);
   left: 736px;
   background-size: cover;
-  background-image: 
-  url("@assets/animation/characterSprite.png");
+  background-image: url("@assets/animation/characterSprite.png");
   will-change: left, top;
 }
 
-@keyframes frame-animation {
-  100% {
-    transform: translateX(-400%);
-  }
-}
-
-/* Анимация движения - начало ------------*/
 .player.move {
   animation: player-walk-animation 0.75s steps(4) infinite;
 }

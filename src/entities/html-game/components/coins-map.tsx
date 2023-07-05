@@ -35,8 +35,15 @@ function CoinsMapTemplate({ model }: Props) {
 
   return (
     <>
-      {coinsRects.map(({ rect, uniqueId }, index) => (
-        <Coin key={uniqueId ?? index} width={rect.width} top={rect.top} left={rect.left} height={rect.height} />
+      {coinsRects.map(({ rect, uniqueId, collectable }, index) => (
+        <Coin
+          key={uniqueId ?? index}
+          show={collectable?.show}
+          width={rect.width}
+          top={rect.top}
+          left={rect.left}
+          height={rect.height}
+        />
       ))}
     </>
   );

@@ -39,12 +39,12 @@ export function createModel() {
   const startMoving = setEvent<ValidKey>();
   const stopMoving = setEvent<void>();
 
-  const removeCoin = setEvent<string>();
+  const collectCoin = setEvent<string>();
   const clearAll = setEvent<void>();
 
   // --> Обработчики
   function handleSetWallsRects(svgRects: NodeListOf<SVGRectElement>) {
-    const mappedRects = Array.from(svgRects).map((rect, index) => ({
+    const mappedRects: Obstacle<DOMRect>[] = Array.from(svgRects).map((rect, index) => ({
       rect: rect.getBoundingClientRect().toJSON(),
       uniqueId: `wall_${index}`,
       type: ObstacleTypes.Wall,
@@ -54,11 +54,14 @@ export function createModel() {
   }
 
   function handleSetCoinsRects(svgRects: NodeListOf<SVGRectElement>) {
-    const mappedRects = Array.from(svgRects).map((rect, index) => ({
+    const mappedRects: Obstacle<DOMRect>[] = Array.from(svgRects).map((rect, index) => ({
       rect: rect.getBoundingClientRect().toJSON(),
       uniqueId: `coin_${index}`,
       isThroughElement: true,
       type: ObstacleTypes.Coin,
+      collectable: {
+        show: true,
+      },
     }));
 
     setCoinsDomRects(mappedRects);
@@ -85,9 +88,9 @@ export function createModel() {
         handleCompleteMarker(obstacle.uniqueId);
       }
 
-      if (obstacle.type === ObstacleTypes.Coin) {
+      if (obstacle.type === ObstacleTypes.Coin && obstacle.collectable?.show) {
         CoinsCollectSound.play();
-        removeCoin(obstacle.uniqueId);
+        collectCoin(obstacle.uniqueId);
         coinsCollectSignal.send(1);
       }
     }
@@ -180,7 +183,18 @@ export function createModel() {
 
   const coinsDomRectsStore = setStore<Obstacle<DOMRect>[]>([])
     .on(setCoinsDomRects, (_, payload) => payload)
-    .on(removeCoin, (coins, coinId) => coins.filter(coin => coin.uniqueId !== coinId))
+    .on(collectCoin, (coins, coinId) => {
+      const coinIndex = coins.findIndex(coin => coin.uniqueId === coinId);
+      if (coinIndex > -1) {
+        const copiedCoins = [...coins];
+        const coin = copiedCoins[coinIndex] as Obstacle<DOMRect>;
+        coin.collectable!.show = false;
+
+        return copiedCoins;
+      }
+
+      return coins;
+    })
     .clear(clearAll);
 
   /** Стор с информацией об игроке (его позиционирование и размеры). */
