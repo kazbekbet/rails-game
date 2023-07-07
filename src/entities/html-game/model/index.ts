@@ -27,6 +27,7 @@ export function createModel() {
   // --> События.
   const setWallsDomRects = setEvent<Obstacle<DOMRect>[]>();
   const setCoinsDomRects = setEvent<Obstacle<DOMRect>[]>();
+  const setCharactersDomRects = setEvent<Obstacle<DOMRect>[]>();
   const setInitialPlayerInfo = setEvent<PlayerInfo>();
   const setMarkersRefs = setEvent<Obstacle<DOMRect>[]>();
   const setMarkerComplete = setEvent<MarkerTypes>();
@@ -65,6 +66,20 @@ export function createModel() {
     }));
 
     setCoinsDomRects(mappedRects);
+  }
+
+  function handleSetCharactersRects(svgRects: NodeListOf<SVGRectElement>) {
+    const mappedRects = Array.from(svgRects).map((rect, index) => {
+      return {
+        rect: rect.getBoundingClientRect().toJSON(),
+        uniqueId: rect.id.length ? rect.id : index.toString(),
+        isThroughElement: false,
+        type: (rect.dataset.type as ObstacleTypes) ?? ObstacleTypes.Marker,
+        data: rect.dataset,
+      };
+    });
+
+    setCharactersDomRects(mappedRects);
   }
 
   function handleSetPlayerInitialInfo(domInfo: DOMRect) {
@@ -170,9 +185,9 @@ export function createModel() {
     const isWallsSetted = isWallsSettedStore.getState();
     const isCoinsSetted = isCoinsSettedStore.getState();
     const isUserInfoSetted = playerInfoStore.getState().isInitialInfoSetted;
-    const isMarkersSetted = markersRectsStore.getState().length > 0;
+    const isCharactersSetted = isCharactersSetteledStore.getState();
 
-    return isWallsSetted && isCoinsSetted && isUserInfoSetted && isMarkersSetted;
+    return isWallsSetted && isCoinsSetted && isUserInfoSetted && isCharactersSetted;
   }
 
   // --> Сторы.
@@ -195,6 +210,10 @@ export function createModel() {
 
       return coins;
     })
+    .clear(clearAll);
+
+  const charactersDomRectsStore = setStore<Obstacle<DOMRect>[]>([])
+    .on(setCharactersDomRects, (_, payload) => payload)
     .clear(clearAll);
 
   /** Стор с информацией об игроке (его позиционирование и размеры). */
@@ -227,13 +246,10 @@ export function createModel() {
     .clear(clearAll);
 
   /** Стор с координатами и информацией о маркерах. */
-  const markersRectsStore = setStore<Obstacle<DOMRect>[]>([])
-    .on(setMarkersRefs, (_, payload) => payload)
-    .clear(clearAll);
 
   /** Стор с информацией о маркерах с возможностью доступа по константному времени. */
   const markersIsCompletedStore = setComputedStore({
-    store: markersRectsStore,
+    store: charactersDomRectsStore,
     transform: markers =>
       markers.reduce((prev: Record<string, CompletableMarker>, curr) => {
         if (curr.uniqueId) {
@@ -264,9 +280,9 @@ export function createModel() {
     transform: playerInfo => {
       const walls = wallsDomRectsStore.getState();
       const coins = coinsDomRectsStore.getState();
-      const markers = markersRectsStore.getState();
+      const markers = charactersDomRectsStore.getState();
 
-      return new CollisionDetector([...walls, ...coins, ...Array.from(markers.values())]).detectCollision(playerInfo);
+      return new CollisionDetector([...walls, ...coins, ...markers]).detectCollision(playerInfo);
     },
   }).watch(({ object }) => handleCheckCollidedObstacle(object));
 
@@ -288,6 +304,11 @@ export function createModel() {
     transform: value => value.length > 0,
   });
 
+  const isCharactersSetteledStore = setComputedStore({
+    store: charactersDomRectsStore,
+    transform: value => value.length > 0,
+  });
+
   /** Вычисляемый стор, содержащий текущий css класс, соответствующий направлению игрока. */
   const moveCssClassStore = setComputedStore({
     store: currentKeyStore,
@@ -304,6 +325,7 @@ export function createModel() {
   return {
     handleSetWallsRects,
     handleSetCoinsRects,
+    handleSetCharactersRects,
     handleSetPlayerInitialInfo,
     handleSetMarkersRects,
     handleCompleteMarker,
@@ -311,11 +333,12 @@ export function createModel() {
     handleKeyUp,
     wallsDomRectsStore,
     coinsDomRectsStore,
-    markersRectsStore,
     markersIsCompletedStore,
     isPlayerMovingStore,
     isWallsSettedStore,
     isCoinsSettedStore,
+    isCharactersSetteledStore,
+    charactersDomRectsStore,
     moveCssClassStore,
     playerStyleStore,
   };

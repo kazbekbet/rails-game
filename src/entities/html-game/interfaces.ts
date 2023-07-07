@@ -22,10 +22,22 @@ export enum ObstacleTypes {
 interface Collectable {
   show: boolean;
 }
+export enum ImageTypes {
+  Man = 'man',
+  Woman = 'woman',
+}
+
+export interface IDataSvg {
+  id: string;
+  imageType: ImageTypes;
+  style: string;
+  type: ObstacleTypes;
+}
 
 export type Obstacle<T> = { rect: T } & {
   uniqueId?: string;
   isThroughElement?: boolean;
   type?: ObstacleTypes;
   collectable?: Collectable;
+  data?: Partial<IDataSvg>;
 };

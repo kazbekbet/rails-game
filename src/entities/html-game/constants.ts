@@ -1,6 +1,9 @@
-import { MarkerTypes, PlayerInfo } from './interfaces';
+import { ImageTypes, MarkerTypes, ObstacleTypes, PlayerInfo } from './interfaces';
 import styles from './styles/html-game.module.scss';
 import coinsSound from '@assets/sounds/comp_coin.wav';
+import man from '@assets/markers/male_1.gif';
+import woman from '@assets/markers/woman.gif';
+import classNames from 'classnames';
 
 export type ValidKey = ArrowKeys | LetterKeys;
 
@@ -22,8 +25,8 @@ export enum LetterKeys {
 
 /** Кнопки - shift. */
 export enum ShiftKeys {
-    ShiftLeft = 'ShiftLeft',
-    ShiftRight = 'ShiftRight',
+  ShiftLeft = 'ShiftLeft',
+  ShiftRight = 'ShiftRight',
 }
 
 /** Начальный (нулевой) шаблон информации об игроке. */
@@ -50,8 +53,8 @@ export const AllowedKeys = {
 
 /** Доступные кнопки для передвижения (используется для проверки). */
 export const AllowedKeysList: Set<ArrowKeys | LetterKeys> = Object.values(AllowedKeys).reduce((prev, curr) => {
-    curr.forEach(key => prev.add(key));
-    return prev;
+  curr.forEach(key => prev.add(key));
+  return prev;
 }, new Set());
 
 /** Список кнопок для ускорения. */
@@ -81,3 +84,18 @@ export const ShiftSpeedPx = 5;
 
 /** Звук сбора монеты. */
 export const CoinsCollectSound = new Audio(coinsSound);
+
+export const ImageForType: { [key in ImageTypes]: string } = {
+  man: man,
+  woman: woman,
+};
+
+const markersClass = {
+  male: classNames(styles.marker, styles.male),
+  female: classNames(styles.marker, styles.female),
+};
+
+export const ClassNamesForType: { [key in ImageTypes]: string } = {
+  man: markersClass.male,
+  woman: markersClass.female,
+};
