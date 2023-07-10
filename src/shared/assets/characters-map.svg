@@ -1,0 +1,9 @@
+<svg width="5847" height="3294" viewBox="0 0 5847 3294" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect x="2525" y="417" width="96" height="96" id="test" data-type="marker" data-image-type="man" data-style='{ "transform": "rotate(180deg)"}'/>
+<rect x="5200" y="282" width="96" height="96" id="sw" data-type="marker" data-image-type="man" data-style='{ "transform": "rotate(270deg)"}'/>
+<rect x="1020" y="420" width="96" height="96" id="om" data-type="marker" data-image-type="woman" data-style='{ "transform": "rotate(180deg)"}'/>
+<rect x="2980" y="1950" width="96" height="96" id="back" data-type="marker" data-image-type="woman" data-style='{ "transform": "rotate(270deg)"}'/>
+<rect x="4790" y="2750" width="96" height="96" id="hr" data-type="marker" data-image-type="woman"/>
+<rect x="4020" y="1520" width="96" height="96" id="pmo" data-type="marker" data-image-type="woman" data-style='{ "transform": "rotate(180deg)"}'/>
+<rect x="4606" y="1000" width="96" height="96" id="analyst" data-type="marker" data-image-type="woman" data-style='{ "transform": "rotate(90deg)"}'/>
+</svg>
