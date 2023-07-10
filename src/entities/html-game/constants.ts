@@ -1,8 +1,8 @@
 import { ImageTypes, MarkerTypes, ObstacleTypes, PlayerInfo } from './interfaces';
 import styles from './styles/html-game.module.scss';
 import coinsSound from '@assets/sounds/comp_coin.wav';
-import man from '@assets/markers/male_1.gif';
-import woman from '@assets/markers/woman.gif';
+import man from '@assets/markers/male.png';
+import woman from '@assets/markers/female.png';
 import classNames from 'classnames';
 
 export type ValidKey = ArrowKeys | LetterKeys;

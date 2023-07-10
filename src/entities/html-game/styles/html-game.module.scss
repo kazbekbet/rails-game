@@ -22,6 +22,8 @@
 .marker,
 .player {
   position: absolute;
+  width: 2rem;
+  height: 2rem;
 }
 
 .marker {
@@ -29,11 +31,9 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 30px;
-  height: 30px;
   background-color: transparentize($accent-color, 0.5);
   border: $accent-color .125rem solid;
-  border-radius: 1rem;
+  border-radius: 2rem;
 }
 
 .marker.completed {
@@ -43,6 +43,8 @@
 
 /* Монетка с анимацией исчезновения */
 .coin {
+  width: 1.5rem;
+  height: 1.5rem;
   position: absolute;
   background-image: url("@assets/coinSprite.png");
   background-size: cover;
@@ -62,10 +64,6 @@
 
 /* Игрок с анимацией ходьбы */
 .player {
-  width: 26px;
-  height: 26px;
-  top: calc(100% - 160px);
-  left: 736px;
   background-size: cover;
   background-image: url("@assets/animation/characterSprite.png");
   will-change: left, top;

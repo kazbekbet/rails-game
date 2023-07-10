@@ -82,8 +82,8 @@ export function createModel() {
     setCharactersDomRects(mappedRects);
   }
 
-  function handleSetPlayerInitialInfo(domInfo: DOMRect) {
-    setInitialPlayerInfo(mapPlayerInfo(PlayerInfoTemplate, domInfo));
+  function handleSetPlayerInitialInfo(svgRect: SVGRectElement) {
+    setInitialPlayerInfo(mapPlayerInfo(PlayerInfoTemplate, svgRect.getBoundingClientRect().toJSON()));
   }
 
   function handleSetMarkersRects(markers: Obstacle<DOMRect>[]) {
@@ -182,12 +182,13 @@ export function createModel() {
   }
 
   function isGameReady() {
+    const isPlayerSetted = isPlayerSettedStore.getState();
     const isWallsSetted = isWallsSettedStore.getState();
     const isCoinsSetted = isCoinsSettedStore.getState();
     const isUserInfoSetted = playerInfoStore.getState().isInitialInfoSetted;
     const isCharactersSetted = isCharactersSetteledStore.getState();
 
-    return isWallsSetted && isCoinsSetted && isUserInfoSetted && isCharactersSetted;
+    return ![isPlayerSetted, isWallsSetted, isCoinsSetted, isUserInfoSetted, isCharactersSetted].includes(false);
   }
 
   // --> Сторы.
@@ -245,8 +246,6 @@ export function createModel() {
     })
     .clear(clearAll);
 
-  /** Стор с координатами и информацией о маркерах. */
-
   /** Стор с информацией о маркерах с возможностью доступа по константному времени. */
   const markersIsCompletedStore = setComputedStore({
     store: charactersDomRectsStore,
@@ -285,6 +284,12 @@ export function createModel() {
       return new CollisionDetector([...walls, ...coins, ...markers]).detectCollision(playerInfo);
     },
   }).watch(({ object }) => handleCheckCollidedObstacle(object));
+
+  /** Вспомогательный стор, отвечающий на вопрос получены ли первоначальные координаты. */
+  const isPlayerSettedStore = setComputedStore({
+    store: playerInfoStore,
+    transform: (store) => store.x !== -100 && store.y !== -100,
+  })
 
   /** Вспомогательный стор, отвечающий на вопрос двигается ли игрок в данный момент. */
   const isPlayerMovingStore = setStore(false)
@@ -334,6 +339,7 @@ export function createModel() {
     wallsDomRectsStore,
     coinsDomRectsStore,
     markersIsCompletedStore,
+    isPlayerSettedStore,
     isPlayerMovingStore,
     isWallsSettedStore,
     isCoinsSettedStore,
