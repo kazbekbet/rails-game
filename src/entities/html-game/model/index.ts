@@ -288,8 +288,8 @@ export function createModel() {
   /** Вспомогательный стор, отвечающий на вопрос получены ли первоначальные координаты. */
   const isPlayerSettedStore = setComputedStore({
     store: playerInfoStore,
-    transform: (store) => store.x !== -100 && store.y !== -100,
-  })
+    transform: store => store.x !== -100 && store.y !== -100,
+  });
 
   /** Вспомогательный стор, отвечающий на вопрос двигается ли игрок в данный момент. */
   const isPlayerMovingStore = setStore(false)
@@ -324,7 +324,10 @@ export function createModel() {
   /** Вычисляемый стор, содержащий стиль с позиционированием игрока. */
   const playerStyleStore = setComputedStore({
     store: playerInfoStore,
-    transform: info => (info.isInitialInfoSetted ? { top: `${info.top}px`, left: `${info.left}px` } : {}),
+    transform: info =>
+      info.isInitialInfoSetted
+        ? { top: `${info.top}px`, left: `${info.left}px`, width: `${info.width}px`, height: `${info.height}px` }
+        : {},
   });
 
   return {
