@@ -1,5 +1,12 @@
 @import "@styles/common.scss";
 
+
+@mixin animatedBackground($image, $steps, $duration: 0.75s) {
+  animation: sprite-animation $duration steps($steps) infinite;
+  background: $image;
+  background-size: cover;
+}
+
 .app {
   height: 100vh;
   position: relative;
@@ -29,13 +36,13 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: transparentize($accent-color, 0.5);
+  background-color: transparentize($accent-color, 0.5) !important;
   border: $accent-color .125rem solid;
   border-radius: 2rem;
 }
 
 .marker.completed {
-  background-color: transparentize($green-color, 0.5);
+  background-color: transparentize($green-color, 0.5) !important;
   border: $green-color .125rem solid;
 }
 
@@ -68,12 +75,15 @@
 }
 
 .player.move {
-  animation: player-walk-animation 0.75s steps(4) infinite;
+  animation: sprite-animation 0.75s steps(4) infinite;
 }
 
-@keyframes player-walk-animation {
-  100% {
-    background-position: -100% 0;
+@keyframes sprite-animation {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: -100%;
   }
 }
 
@@ -99,31 +109,7 @@
 }
 
 .marker.female {
-  background-image: url("@assets/animation/markers/female/frame_0.png");
-  //TODO: оптимизировать анимации. Тормозит.
-  //animation: female-marker-animation 3s infinite;
-}
-
-@keyframes female-marker-animation {
-  0% {
-    background-image: url("@assets/animation/markers/female/frame_0.png");
-  }
-
-  25% {
-    background-image: url("@assets/animation/markers/female/frame_1.png")
-  }
-
-  50% {
-    background-image: url("@assets/animation/markers/female/frame_2.png");
-  }
-
-  75% {
-    background-image: url("@assets/animation/markers/female/frame_3.png");
-  }
-
-  100% {
-    background-image: url("@assets/animation/markers/female/frame_4.png");
-  }
+  @include animatedBackground(url("@assets/animation/markers/female/female-stay-sprite.png"), 5, 5s);
 }
 
 .marker.male {
