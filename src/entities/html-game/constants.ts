@@ -85,9 +85,8 @@ export const ShiftSpeedPx = 5;
 /** Звук сбора монеты. */
 export const CoinsCollectSound = new Audio(coinsSound);
 
-export const ImageForType: { [key in ImageTypes]: string } = {
+export const ImageForType: { [key in ImageTypes]?: string } = {
   man: man,
-  woman: woman,
 };
 
 const markersClass = {
