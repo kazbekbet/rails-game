@@ -1,3 +1,4 @@
+import { PlayerActions } from '@entities/html-game/constants';
 import { registerSignal, useSignal } from '@libs/signal';
 
 export namespace MarkersId {
@@ -45,6 +46,23 @@ export namespace CoinsCollectNotifier {
 
   export function use() {
     return useSignal<number>(alias);
+  }
+
+  export function watchHistory() {
+    const { historyStore } = useSignal<number>(alias);
+    historyStore.watch(history => console.log(`💥 Signal: ${alias}`, history));
+  }
+}
+
+export namespace PlayerInputAction {
+  export const alias = 'PlayerInputAction';
+
+  export function init() {
+    registerSignal<PlayerActions | null>(alias, null);
+  }
+
+  export function use() {
+    return useSignal<PlayerActions>(alias);
   }
 
   export function watchHistory() {

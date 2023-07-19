@@ -41,3 +41,12 @@ export type Obstacle<T> = { rect: T } & {
   collectable?: Collectable;
   data?: Partial<IDataSvg>;
 };
+
+export type ItemIdType = 'notebook';
+
+export interface IPlayerEquipment {
+  id: ItemIdType;
+  description?: string;
+  title: string;
+  isCanUse: boolean;
+}

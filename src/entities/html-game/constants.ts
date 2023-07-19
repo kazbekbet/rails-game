@@ -1,4 +1,4 @@
-import { ImageTypes, MarkerTypes, ObstacleTypes, PlayerInfo } from './interfaces';
+import { IPlayerEquipment, ImageTypes, ItemIdType, MarkerTypes, ObstacleTypes, PlayerInfo } from './interfaces';
 import styles from './styles/html-game.module.scss';
 import coinsSound from '@assets/sounds/comp_coin.wav';
 import man from '@assets/markers/male.png';
@@ -21,6 +21,10 @@ export enum LetterKeys {
   KeyA = 'KeyA',
   KeyW = 'KeyW',
   KeyS = 'KeyS',
+}
+
+export enum ControllKeys {
+  KeyI = 'KeyI',
 }
 
 /** Кнопки - shift. */
@@ -57,6 +61,14 @@ export const AllowedKeysList: Set<ArrowKeys | LetterKeys> = Object.values(Allowe
   return prev;
 }, new Set());
 
+export type PlayerActions = 'inventory';
+
+/** Список кнопок для доп. дейсвий */
+export const AllowedActionKeys = new Set(Object.values(ControllKeys));
+
+export const ActionsByActionKeys: { [key in ControllKeys]: PlayerActions } = {
+  [ControllKeys.KeyI]: 'inventory',
+};
 /** Список кнопок для ускорения. */
 export const AccelerationKeys = new Set(Object.values(ShiftKeys));
 
@@ -97,4 +109,17 @@ const markersClass = {
 export const ClassNamesForType: { [key in ImageTypes]: string } = {
   man: markersClass.male,
   woman: markersClass.female,
+};
+
+export const mapModalIdToItem: { [key: string]: ItemIdType } = {
+  sw: 'notebook',
+};
+
+export const itemsInInventory: { [key in ItemIdType]: IPlayerEquipment } = {
+  notebook: {
+    id: 'notebook',
+    description: 'Используй ноутбук, чтобы проверить свои знания',
+    title: 'Рабочий ноутбук',
+    isCanUse: true,
+  },
 };
