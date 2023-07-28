@@ -10,7 +10,7 @@ import { useInvisibleRects } from '@entities/html-game/utils/use-invisible-rects
 import { usePlayerRect } from '@entities/html-game/utils/use-player-rect';
 import { MarkerTypes } from './interfaces';
 import { CoinsMap } from '@entities/html-game/components/coins-map';
-import { Inventory } from './components/inventory';
+import { Inventory } from './components/inventory-component';
 
 function HtmlGame() {
   const model = useMemo(createModel, []);
