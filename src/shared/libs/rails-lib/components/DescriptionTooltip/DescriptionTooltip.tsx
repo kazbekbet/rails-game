@@ -8,7 +8,7 @@ interface IDescriptionTooltip extends ITooltip {
   description?: React.ReactNode;
 }
 
-const DescriptionTooltip: FC<IDescriptionTooltip> = ({ className, title, description, ...tooltipProps }) => (
+export const DescriptionTooltip: FC<IDescriptionTooltip> = ({ className, title, description, ...tooltipProps }) => (
   <Tooltip {...tooltipProps} className={className}>
     <Styled.DescriptionTooltipContainer>
       {title && <p>{title}</p>}
@@ -16,5 +16,3 @@ const DescriptionTooltip: FC<IDescriptionTooltip> = ({ className, title, descrip
     </Styled.DescriptionTooltipContainer>
   </Tooltip>
 );
-
-export default DescriptionTooltip;

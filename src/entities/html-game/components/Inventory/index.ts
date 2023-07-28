@@ -1,1 +1,2 @@
-export { default as Inventory } from './Inventory';
+export * from './inventory-container';
+export * from './inventory-modal';

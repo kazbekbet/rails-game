@@ -44,7 +44,7 @@ export type Obstacle<T> = { rect: T } & {
 
 export type ItemIdType = 'notebook';
 
-export interface IPlayerEquipment {
+export interface PlayerEquipment {
   id: ItemIdType;
   description?: string;
   title: string;

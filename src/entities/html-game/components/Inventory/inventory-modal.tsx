@@ -1,13 +1,14 @@
 import { createPortal } from 'react-dom';
-import { FC, useMemo, useState } from 'react';
-import { useStore } from 're-event';
-import { HtmlGameModel } from '@entities/html-game/model';
-import { IPlayerEquipment, ItemIdType } from '@entities/html-game/interfaces';
-import laptopIcon from '@assets/icons/inventory/laptop-icon.svg';
+import { useMemo } from 'react';
+import { ItemIdType, PlayerEquipment } from '@entities/html-game/interfaces';
 import { Modal } from '@shared/libs/rails-lib/components/ModalContainer';
 import { DescriptionTooltip } from '@shared/libs/rails-lib/components';
-import { PlayerInputAction } from '@api/signals';
+import laptopIcon from '@assets/icons/inventory/laptop-icon.svg';
 import * as Styled from './styled';
+
+const imagesForKeys: { [key in ItemIdType]: string } = {
+  notebook: laptopIcon,
+};
 
 const columnsCount = 5;
 const rowsCount = 5;
@@ -16,55 +17,18 @@ const fillersSize = columnsCount * rowsCount;
 
 const filers = Array(fillersSize).fill(0);
 
-const imagesForKeys: { [key in ItemIdType]: string } = {
-  notebook: laptopIcon,
-};
-
-interface IInventory {
-  model: HtmlGameModel;
-}
-
-const Inventory: FC<IInventory> = ({ model }) => {
-  const [isShowModal, setIsShowModal] = useState(false);
-  const currentUserInventory = useStore(model.currentUserInventory);
-  const playerInputActionSignal = PlayerInputAction.use();
-
-  playerInputActionSignal.store.watch(val => {
-    if (val === 'inventory') {
-      setIsShowModal(isOpen => !isOpen);
-    }
-  });
-
-  return (
-    <>
-      <Styled.BagIcon onClick={() => setIsShowModal(true)}>
-        <p>I</p>
-      </Styled.BagIcon>
-      <InventoryModal
-        handleUseItemFromInventory={model.handleUseItemFromInventory}
-        isShowModal={isShowModal}
-        setIsShowModal={setIsShowModal}
-        currentUserInventory={currentUserInventory}
-      />
-    </>
-  );
-};
-
-export default Inventory;
-
-interface IInventoryModal {
+interface InventoryModalProps {
   isShowModal: boolean;
-  currentUserInventory: IPlayerEquipment[];
-  setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  handleUseItemFromInventory: (value: IPlayerEquipment) => void;
+  currentUserInventory: PlayerEquipment[];
+  setIsShowModal: (value: boolean) => void;
+  handleUseItemFromInventory: (value: PlayerEquipment) => void;
 }
-
-const InventoryModal: FC<IInventoryModal> = ({
+export const InventoryModal = ({
   isShowModal,
   currentUserInventory,
   setIsShowModal,
   handleUseItemFromInventory,
-}) => {
+}: InventoryModalProps) => {
   const fillers = useMemo(() => {
     return [...filers].slice(0, fillersSize - currentUserInventory.length);
   }, [currentUserInventory]);

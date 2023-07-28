@@ -1,1 +1,1 @@
-export { default as DescriptionTooltip } from './DescriptionTooltip';
+export * from './DescriptionTooltip';

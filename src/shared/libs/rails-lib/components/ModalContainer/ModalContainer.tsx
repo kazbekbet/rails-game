@@ -21,7 +21,7 @@ const ModalContext = React.createContext<IModalContext>({ onCloseModal: () => {}
 
 const useModalContext = () => React.useContext(ModalContext);
 
-const ModalOverlay: FC<IModalOverlay> = props => {
+export const ModalOverlay: FC<IModalOverlay> = props => {
   const { onCloseModal = () => {} } = props;
   return (
     <Styled.ModalOverlay className={props.className} onClick={onCloseModal}>
@@ -30,7 +30,7 @@ const ModalOverlay: FC<IModalOverlay> = props => {
   );
 };
 
-const ModalContainer: FC<IModalContainer> = props => {
+export const ModalContainer: FC<IModalContainer> = props => {
   return (
     <Styled.ModalContainer className={props.className} onClick={event => event.stopPropagation()}>
       {props.children}
@@ -40,7 +40,7 @@ const ModalContainer: FC<IModalContainer> = props => {
 
 interface IModalTitle extends IModalPropsBase {}
 
-const ModalTitle: FC<IModalTitle> = ({ children, className }) => {
+export const ModalTitle: FC<IModalTitle> = ({ children, className }) => {
   const { onCloseModal } = useModalContext();
   return (
     <Styled.ModalTitle className={className}>
@@ -48,10 +48,4 @@ const ModalTitle: FC<IModalTitle> = ({ children, className }) => {
       <Styled.CloseIcon src={closeIcon} onClick={onCloseModal} />
     </Styled.ModalTitle>
   );
-};
-
-export default {
-  ModalContainer,
-  ModalTitle,
-  ModalOverlay,
 };

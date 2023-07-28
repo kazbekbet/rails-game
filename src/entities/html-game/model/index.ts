@@ -18,7 +18,7 @@ import {
   itemsInInventory,
   mapModalIdToItem,
 } from '../constants';
-import { CompletableMarker, IPlayerEquipment, MarkerTypes, Obstacle, ObstacleTypes, PlayerInfo } from '../interfaces';
+import { CompletableMarker, PlayerEquipment, MarkerTypes, Obstacle, ObstacleTypes, PlayerInfo } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
 import { CollisionDetector } from '../utils/physics';
 import { CoinsCollectNotifier, MarkersId, PlayerInputAction } from '@api/signals';
@@ -38,6 +38,8 @@ export function createModel() {
   const setInitialPlayerInfo = setEvent<PlayerInfo>();
   const setMarkersRefs = setEvent<Obstacle<DOMRect>[]>();
   const setMarkerComplete = setEvent<MarkerTypes>();
+  const setIsOpenInventoryModal = setEvent<boolean>();
+  const toggleOpenInventoryModal = setEvent<void>();
 
   const moveUp = setEvent<void>();
   const moveRight = setEvent<void>();
@@ -149,8 +151,14 @@ export function createModel() {
     }
   }
 
+  playerInputActionSignal.store.watch(val => {
+    if (val === 'inventory') {
+      toggleOpenInventoryModal();
+    }
+  });
+
   //* Вызывается при выборе предмета в инвентаре*/
-  function handleUseItemFromInventory(item: IPlayerEquipment) {}
+  function handleUseItemFromInventory(item: PlayerEquipment) {}
 
   /** Маппит возвожные пути перемещения в зависимости от кнопки. */
   function playerMovingMapper(key: ValidKey, isAccelerationNeeded: boolean) {
@@ -280,9 +288,20 @@ export function createModel() {
     return { ...markers, [payload]: { id: payload, completed: true } };
   });
 
-  const currentUserInventory = setStore<IPlayerEquipment[]>([]).on(openModal, (value, payload) => {
+  const isOpenInventoryModal = setStore<boolean>(false)
+    .on(setIsOpenInventoryModal, (_, payload) => payload)
+    .on(toggleOpenInventoryModal, value => !value);
+
+  /** Вызывается при открытии модальных окон, по id модального окна определяет какой предмет нужно добавить в инвентарь */
+  const currentUserInventory = setStore<PlayerEquipment[]>([]).on(openModal, (value, payload) => {
     const itemKeyFromModal = mapModalIdToItem[payload];
     if (!itemKeyFromModal) {
+      return value;
+    }
+
+    const itemForAddToInventory = itemsInInventory[itemKeyFromModal];
+
+    if (value.includes(itemForAddToInventory)) {
       return value;
     }
 
@@ -363,6 +382,7 @@ export function createModel() {
     handleCompleteMarker,
     handleKeyDown,
     handleKeyUp,
+    setIsOpenInventoryModal,
     wallsDomRectsStore,
     coinsDomRectsStore,
     markersIsCompletedStore,
@@ -376,5 +396,6 @@ export function createModel() {
     playerStyleStore,
     handleUseItemFromInventory,
     currentUserInventory,
+    isOpenInventoryModal,
   };
 }

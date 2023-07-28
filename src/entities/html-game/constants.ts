@@ -1,4 +1,4 @@
-import { IPlayerEquipment, ImageTypes, ItemIdType, MarkerTypes, ObstacleTypes, PlayerInfo } from './interfaces';
+import { PlayerEquipment, ImageTypes, ItemIdType, MarkerTypes, ObstacleTypes, PlayerInfo } from './interfaces';
 import styles from './styles/html-game.module.scss';
 import coinsSound from '@assets/sounds/comp_coin.wav';
 import man from '@assets/markers/male.png';
@@ -115,7 +115,7 @@ export const mapModalIdToItem: { [key: string]: ItemIdType } = {
   sw: 'notebook',
 };
 
-export const itemsInInventory: { [key in ItemIdType]: IPlayerEquipment } = {
+export const itemsInInventory: { [key in ItemIdType]: PlayerEquipment } = {
   notebook: {
     id: 'notebook',
     description: 'Используй ноутбук, чтобы проверить свои знания',

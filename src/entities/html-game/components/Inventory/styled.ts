@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import bagIcon from '@assets/icons/inventory/bag-icon.svg';
-import { C_BOREDER_GRAY, C_PRIMARY, C_WHITE } from '@shared/libs/rails-lib/constants/colors';
+import { C_BORDER_GRAY, C_PRIMARY, C_WHITE } from '@shared/libs/rails-lib/constants/colors';
 
 export const BagIcon = styled.div`
   background: url(${bagIcon});
@@ -33,7 +33,7 @@ const ItemBase = css`
   width: 100%;
   height: 100%;
   border-radius: 5px;
-  border: 2px solid ${C_BOREDER_GRAY};
+  border: 2px solid ${C_BORDER_GRAY};
 `;
 
 export const InventoryModal = styled.div`
