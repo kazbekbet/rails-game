@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import coin from '@assets/coin.svg';
 import styles from '@entities/html-game/styles/html-game.module.scss';
-import classNames from "classnames";
+import classNames from 'classnames';
 
 interface CoinProps {
   width: number;
@@ -16,10 +16,7 @@ export const Coin = memo(({ width, top, left, height, show }: CoinProps) => {
     [styles.collected!]: !show,
   });
 
-  return (
-    <div
-      className={className}
-      style={{ width, top, left, height }}
-    />
-  );
+  console.log('coin');
+
+  return <div className={className} style={{ width, top, left, height }} />;
 });
