@@ -1,10 +1,13 @@
-import { setComputedStore, setEvent, setStore } from 're-event';
+import { SetEvent, setComputedStore, setEvent, setStore } from 're-event';
 import {
   AccelerationKeys,
+  ActionsByActionKeys,
+  AllowedActionKeys,
   AllowedKeys,
   AllowedKeysList,
   ArrowKeys,
   CoinsCollectSound,
+  ControllKeys,
   MapMoveStylesByKey,
   MarkersList,
   MovementDeltaPx,
@@ -12,25 +15,31 @@ import {
   ShiftKeys,
   ShiftSpeedPx,
   ValidKey,
+  itemsInInventory,
+  mapModalIdToItem,
 } from '../constants';
-import { CompletableMarker, MarkerTypes, Obstacle, ObstacleTypes, PlayerInfo } from '../interfaces';
+import { CompletableMarker, PlayerEquipment, MarkerTypes, Obstacle, ObstacleTypes, PlayerInfo } from '../interfaces';
 import { mapPlayerInfo } from '../utils/map-player-info';
 import { CollisionDetector } from '../utils/physics';
-import { CoinsCollectNotifier, MarkersId } from '@api/signals';
+import { CoinsCollectNotifier, MarkersId, PlayerInputAction } from '@api/signals';
 
 export type HtmlGameModel = ReturnType<typeof createModel>;
 
 export function createModel() {
   const markersSignal = MarkersId.use();
   const coinsCollectSignal = CoinsCollectNotifier.use();
+  const playerInputActionSignal = PlayerInputAction.use();
 
   // --> События.
+  const openModal = setEvent<string>();
   const setWallsDomRects = setEvent<Obstacle<DOMRect>[]>();
   const setCoinsDomRects = setEvent<Obstacle<DOMRect>[]>();
   const setCharactersDomRects = setEvent<Obstacle<DOMRect>[]>();
   const setInitialPlayerInfo = setEvent<PlayerInfo>();
   const setMarkersRefs = setEvent<Obstacle<DOMRect>[]>();
   const setMarkerComplete = setEvent<MarkerTypes>();
+  const setIsOpenInventoryModal = setEvent<boolean>();
+  const toggleOpenInventoryModal = setEvent<void>();
 
   const moveUp = setEvent<void>();
   const moveRight = setEvent<void>();
@@ -42,6 +51,8 @@ export function createModel() {
 
   const collectCoin = setEvent<string>();
   const clearAll = setEvent<void>();
+
+  markersSignal.store.watch(openModal);
 
   // --> Обработчики
   function handleSetWallsRects(svgRects: NodeListOf<SVGRectElement>) {
@@ -123,6 +134,10 @@ export function createModel() {
         return;
       }
 
+      if (AllowedActionKeys.has(event.code as ControllKeys)) {
+        playerInputActionSignal.send(ActionsByActionKeys[event.code as ControllKeys]);
+      }
+
       if (AccelerationKeys.has(event.code as ShiftKeys)) {
         const keyCode = event.code as ValidKey;
         const lastMovingKey = currentKeyStore.getState();
@@ -135,6 +150,15 @@ export function createModel() {
       }
     }
   }
+
+  playerInputActionSignal.store.watch(val => {
+    if (val === 'inventory') {
+      toggleOpenInventoryModal();
+    }
+  });
+
+  //* Вызывается при выборе предмета в инвентаре*/
+  function handleUseItemFromInventory(item: PlayerEquipment) {}
 
   /** Маппит возвожные пути перемещения в зависимости от кнопки. */
   function playerMovingMapper(key: ValidKey, isAccelerationNeeded: boolean) {
@@ -264,6 +288,25 @@ export function createModel() {
     return { ...markers, [payload]: { id: payload, completed: true } };
   });
 
+  const isOpenInventoryModal = setStore<boolean>(false)
+    .on(setIsOpenInventoryModal, (_, payload) => payload)
+    .on(toggleOpenInventoryModal, value => !value);
+
+  /** Вызывается при открытии модальных окон, по id модального окна определяет какой предмет нужно добавить в инвентарь */
+  const currentUserInventory = setStore<PlayerEquipment[]>([]).on(openModal, (value, payload) => {
+    const itemKeyFromModal = mapModalIdToItem[payload];
+    if (!itemKeyFromModal) {
+      return value;
+    }
+
+    const itemForAddToInventory = itemsInInventory[itemKeyFromModal];
+
+    if (value.includes(itemForAddToInventory)) {
+      return value;
+    }
+
+    return [itemsInInventory[itemKeyFromModal], ...value];
+  });
   /** Стор, содержайщий последнюю нажатую кнопку. */
   const currentKeyStore = setStore<ValidKey | null>(ArrowKeys.ArrowUp)
     .on(startMoving, (_, payload) => payload)
@@ -339,6 +382,7 @@ export function createModel() {
     handleCompleteMarker,
     handleKeyDown,
     handleKeyUp,
+    setIsOpenInventoryModal,
     wallsDomRectsStore,
     coinsDomRectsStore,
     markersIsCompletedStore,
@@ -350,5 +394,8 @@ export function createModel() {
     charactersDomRectsStore,
     moveCssClassStore,
     playerStyleStore,
+    handleUseItemFromInventory,
+    currentUserInventory,
+    isOpenInventoryModal,
   };
 }
