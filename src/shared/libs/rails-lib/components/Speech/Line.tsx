@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { SPEECH_ANIMATION_TIME } from './constants';
-import { Blink, DialogLine } from './styled';
+import { DialogLine } from './styled';
+import { useLineAnimation } from './use-line-animation';
 
 type TProps = {
   children: string;
@@ -16,6 +17,10 @@ type TProps = {
  */
 export const Line: React.FC<TProps> = ({ children, hasBlink, delay = 0, time = SPEECH_ANIMATION_TIME }) => {
   const [isVisible, setIsVisible] = React.useState<boolean>(!delay);
+  const [isAnimationFinished, setIsAnimationFinished] = useState(false);
+  const lineRef = useRef<HTMLDivElement>(null);
+
+  useLineAnimation(isVisible, lineRef, children, () => setIsAnimationFinished(true));
 
   React.useEffect(() => {
     if (!isVisible) {
@@ -27,16 +32,7 @@ export const Line: React.FC<TProps> = ({ children, hasBlink, delay = 0, time = S
     }
   }, []);
 
-  return isVisible
-    ? (
-      <DialogLine length={hasBlink ? children.length + 1 : children.length} time={time}>
-        {children}
-        {
-          hasBlink
-            ? <Blink />
-            : null
-        }
-      </DialogLine>
-    )
-    : null;
+  const isShowBlink = useMemo(() => !!hasBlink && isAnimationFinished, [hasBlink, isAnimationFinished]);
+
+  return <DialogLine ref={lineRef} hasBlink={isShowBlink}></DialogLine>;
 };
