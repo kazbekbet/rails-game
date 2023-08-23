@@ -40,5 +40,12 @@ const createDetectCollision = () => {
   ];
 };
 
-export const [detectCollision, getObject] = createDetectCollision();
+export const secondsToMilliseconds = (seconds: number) => {
+  if (!seconds) {
+    return 0;
+  }
 
+  return seconds * 1000;
+};
+
+export const [detectCollision, getObject] = createDetectCollision();
