@@ -1,8 +1,7 @@
 import styles from '../styles/html-game.module.scss';
 import walls from '@assets/walls.svg';
-import { Ref, forwardRef, ForwardedRef } from 'react';
-import { useStore } from 're-event';
-import * as model from '../model';
+import { forwardRef, ForwardedRef } from 'react';
+import { useStore } from 're-event-flow';
 import classNames from 'classnames';
 import { HtmlGameModel } from '../model';
 

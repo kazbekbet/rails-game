@@ -1,7 +1,6 @@
-import { setComputedStore, setEvent, setStore, redirect } from 're-event';
+import { setComputedStore, setEvent, setStore } from 're-event-flow';
 import { MarkerTypes } from '@entities/html-game';
 import { MODALS_CONFIG, GAME_FINISHED_MODAL, Modal } from '@libs/rails-lib';
-import { delay } from '@helpers/delay';
 import { MarkersProgress, MarkersId, CoinsProgress } from '@api/signals';
 
 // --> Маппит конфиг в удобоваримый вид Record<string, object> для поиска модалки по ключу.

@@ -1,4 +1,4 @@
-import { setComputedStore, setEvent, setStore } from 're-event';
+import { setEvent, setStore } from 're-event-flow';
 import { CoinsCollectNotifier, MarkersProgress, CoinsProgress } from '@api/signals';
 
 export type StatisticsModel = ReturnType<typeof createModel>;

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import styles from '../styles/html-game.module.scss';
 import { ForwardedRef, forwardRef } from 'react';
 import { HtmlGameModel } from '../model';
-import { useStore } from 're-event';
+import { useStore } from 're-event-flow';
 import { Character } from '@entities/html-game/components/character';
 import charactersMap from '@assets/characters-map.svg';
 

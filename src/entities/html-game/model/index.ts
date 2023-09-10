@@ -1,4 +1,4 @@
-import { SetEvent, setComputedStore, setEvent, setStore } from 're-event';
+import { setComputedStore, setEvent, setStore } from 're-event-flow';
 import {
   AccelerationKeys,
   ActionsByActionKeys,

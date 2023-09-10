@@ -1,5 +1,4 @@
-import * as model from '../model';
-import { useStore } from 're-event';
+import { useStore } from 're-event-flow';
 import { ModalView } from '@libs/rails-lib';
 import { ShowModalModel } from '../model';
 

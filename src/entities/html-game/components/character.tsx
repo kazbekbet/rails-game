@@ -1,7 +1,5 @@
-import * as model from '../model';
-import { MarkerTypes } from '@entities/html-game';
-import { CSSProperties, ForwardedRef, forwardRef, memo, RefObject } from 'react';
-import { useStore } from 're-event';
+import { ForwardedRef, forwardRef } from 'react';
+import { useStore } from 're-event-flow';
 import classNames from 'classnames';
 import styles from '../styles/html-game.module.scss';
 import { HtmlGameModel } from '../model';

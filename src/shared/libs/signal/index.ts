@@ -1,4 +1,4 @@
-import { setEvent, setStore, Store, SetEvent } from 're-event';
+import { setEvent, setStore, Store, SetEvent } from 're-event-flow';
 import { buildHistoryMessage } from './utils';
 
 interface Signal<Val> {

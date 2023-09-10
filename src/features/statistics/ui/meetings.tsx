@@ -1,8 +1,7 @@
 import cn from 'classnames';
 import styles from '../styles/statistics.module.scss';
-import { useMemo } from 'react';
-import { createModel, StatisticsModel } from '../model';
-import { useStore } from 're-event';
+import { StatisticsModel } from '../model';
+import { useStore } from 're-event-flow';
 
 export function Meetings({ model }: { model: StatisticsModel }) {
   return (

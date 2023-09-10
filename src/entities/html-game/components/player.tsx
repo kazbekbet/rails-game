@@ -1,7 +1,5 @@
-import { useStore } from 're-event';
-import * as model from '../model';
-import { AllowedKeys } from '../constants';
-import { ForwardedRef, forwardRef, useEffect } from 'react';
+import { useStore } from 're-event-flow';
+import { ForwardedRef, forwardRef } from 'react';
 import classNames from 'classnames';
 import styles from '../styles/html-game.module.scss';
 import { HtmlGameModel } from '../model';

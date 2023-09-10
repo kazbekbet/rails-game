@@ -1,10 +1,9 @@
 import coinsMap from '@assets/coins-map.svg';
-import coin from '@assets/coin.svg';
 import styles from '@entities/html-game/styles/html-game.module.scss';
 import { HtmlGameModel } from '@entities/html-game/model';
-import { ForwardedRef, forwardRef, memo } from 'react';
+import { ForwardedRef, forwardRef } from 'react';
 import classNames from 'classnames';
-import { useStore } from 're-event';
+import { useStore } from 're-event-flow';
 import { Coin } from '@entities/html-game/components/coin';
 
 interface Props {

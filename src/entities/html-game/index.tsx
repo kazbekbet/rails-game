@@ -1,5 +1,5 @@
 import styles from './styles/html-game.module.scss';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { CharactersMap } from '@entities/html-game/components/characters';
 import { Map } from '@entities/html-game/components/map';
 import { Player } from '@entities/html-game/components/player';

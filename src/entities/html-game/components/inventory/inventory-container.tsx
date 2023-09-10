@@ -1,4 +1,4 @@
-import { useStore } from 're-event';
+import { useStore } from 're-event-flow';
 import { HtmlGameModel } from '@entities/html-game/model';
 import * as Styled from './styled';
 import { InventoryModal } from './inventory-modal';

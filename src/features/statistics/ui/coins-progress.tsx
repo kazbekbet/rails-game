@@ -1,8 +1,7 @@
 import cn from 'classnames';
 import styles from '../styles/statistics.module.scss';
-import { useMemo } from 'react';
-import { createModel, StatisticsModel } from '../model';
-import { useStore } from 're-event';
+import { StatisticsModel } from '../model';
+import { useStore } from 're-event-flow';
 import coin from '@assets/coin.svg';
 
 export function CoinsProgress({ model }: { model: StatisticsModel }) {
