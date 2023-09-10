@@ -12,7 +12,7 @@
     "classnames": "^2.3.2",
     "phaser": "^3.55.2",
     "prop-types": "^15.8.1",
-    "re-event-flow": "^0.1.0",
+    "re-event-flow": "0.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-shadow": "^20.0.0",
